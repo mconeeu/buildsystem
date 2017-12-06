@@ -1,0 +1,6 @@
+name: MCONE-BuildSystem
+author: Rufus Maiwald
+version: 1.0.0-SNAPSHOT
+main: eu.mcone.buildsystem.Main
+depend: [MCONE-BukkitCoreSystem]
+softdepend: [WorldEdit]
