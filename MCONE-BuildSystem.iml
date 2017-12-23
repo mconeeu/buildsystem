@@ -12,7 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: eu.mcone:MCONE-BukkitCoreSystem:2.6.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: eu.mcone:MCONE-BukkitCoreSystem:3.0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q.worldedit:worldedit-bukkit:6.1.5" level="project" />
   </component>
 </module>

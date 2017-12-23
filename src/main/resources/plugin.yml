@@ -1,6 +1,23 @@
 name: MCONE-BuildSystem
 author: Rufus Maiwald
-version: 1.0.0-SNAPSHOT
+version: 1.0.1-SNAPSHOT
 main: eu.mcone.buildsystem.Main
 depend: [MCONE-BukkitCoreSystem]
 softdepend: [WorldEdit]
+
+commands:
+  spawn:
+    description: Teleportiert den Spieler zum Spawn
+  holo:
+    description: Setze die einzelnen Hologramme
+    permission: system.bukkit.holo
+
+permissions:
+  build:
+    description: Lobby Main Permission
+    children:
+      build.set:
+        description: Allows to set several things
+        children:
+          build.set.spawn:
+            description: Allows to set the spawn
