@@ -11,6 +11,15 @@ commands:
   holo:
     description: Setze die einzelnen Hologramme
     permission: system.bukkit.holo
+  tpa:
+    description: Schickt eine Teleportanfrage
+  tpaccept:
+    description: Akzeptiert eine Teleportanfrage
+  tpdeny:
+    description: Verweigert eine Teleportanfrage
+  skull:
+    description: Gibt den Kopf eines Spielers
+    permission: build.skull
 
 permissions:
   build:
@@ -21,3 +30,5 @@ permissions:
         children:
           build.set.spawn:
             description: Allows to set the spawn
+      build.skull:
+        description: Allows to get a players skull

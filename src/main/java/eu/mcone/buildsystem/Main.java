@@ -1,7 +1,7 @@
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
-import eu.mcone.buildsystem.command.SpawnCMD;
+import eu.mcone.buildsystem.command.*;
 import eu.mcone.buildsystem.listener.PlayerChangedWorld;
 import eu.mcone.buildsystem.listener.PlayerJoin;
 import eu.mcone.buildsystem.util.Objective;
@@ -42,6 +42,10 @@ public class Main extends JavaPlugin implements PermissionsProvider {
 
         getCommand("spawn").setExecutor(new SpawnCMD());
         getCommand("holo").setExecutor(new HoloCMD(holo));
+        getCommand("tpa").setExecutor(new TpaCMD());
+        getCommand("tpaccept").setExecutor(new TpacceptCMD());
+        getCommand("tpdeny").setExecutor(new TpdenyCMD());
+        getCommand("skull").setExecutor(new SkullCMD());
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
