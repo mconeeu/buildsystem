@@ -1,23 +1,26 @@
+/*
+ * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem.util;
 
-import eu.mcone.bukkitcoresystem.player.CorePlayer;
-import eu.mcone.bukkitcoresystem.scoreboard.ObjectiveHandler;
+import eu.mcone.coresystem.bukkit.player.CorePlayer;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Scoreboard;
 
-public class Objective implements ObjectiveHandler {
+public class Objective extends eu.mcone.coresystem.bukkit.scoreboard.Objective {
 
     private String world;
 
     public Objective(CorePlayer p) {
-        p.getScoreboard().setNewObjective(DisplaySlot.SIDEBAR, this, "Plot", "BuildServer");
+        super(p, DisplaySlot.SIDEBAR, "Plot", "BuildServer");
     }
 
     @Override
-    public void register(CorePlayer p, Scoreboard sb) {
-        world = "§f§o"+p.bukkit().getWorld().getName();
+    public void register() {
+        world = "§f§o"+getPlayer().bukkit().getWorld().getName();
 
-        org.bukkit.scoreboard.Objective o = sb.getObjective(DisplaySlot.SIDEBAR);
+        org.bukkit.scoreboard.Objective o = getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         o.setDisplayName("§7§l⚔ §e§l§nBuild Server");
 
         o.getScore("§0").setScore(7);
@@ -31,12 +34,11 @@ public class Objective implements ObjectiveHandler {
     }
 
     @Override
-    public void reload(CorePlayer p, Scoreboard sb) {
-        org.bukkit.scoreboard.Objective o = sb.getObjective(DisplaySlot.SIDEBAR);
-        sb.resetScores(world);
+    public void reload() {
+        org.bukkit.scoreboard.Objective o = getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        getScoreboard().resetScores(world);
 
-        world = "§f§o"+p.bukkit().getWorld().getName();
+        world = "§f§o"+getPlayer().bukkit().getWorld().getName();
         o.getScore(world).setScore(2);
     }
-
 }

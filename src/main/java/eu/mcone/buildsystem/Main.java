@@ -1,20 +1,29 @@
+/*
+ * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
 import eu.mcone.buildsystem.command.*;
 import eu.mcone.buildsystem.listener.PlayerChangedWorld;
 import eu.mcone.buildsystem.listener.PlayerJoin;
+import eu.mcone.buildsystem.listener.SignChange;
 import eu.mcone.buildsystem.util.Objective;
-import eu.mcone.bukkitcoresystem.CoreSystem;
-import eu.mcone.bukkitcoresystem.api.HologramAPI;
-import eu.mcone.bukkitcoresystem.command.HoloCMD;
-import eu.mcone.bukkitcoresystem.config.MySQL_Config;
-import eu.mcone.bukkitcoresystem.player.CorePlayer;
+import eu.mcone.coresystem.bukkit.CoreSystem;
+import eu.mcone.coresystem.bukkit.command.HoloCMD;
+import eu.mcone.coresystem.bukkit.command.NpcCMD;
+import eu.mcone.coresystem.bukkit.hologram.HologramManager;
+import eu.mcone.coresystem.bukkit.npc.NpcManager;
+import eu.mcone.coresystem.bukkit.player.CorePlayer;
+import eu.mcone.coresystem.lib.mysql.MySQL_Config;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
 import java.util.List;
 
 public class Main extends JavaPlugin implements PermissionsProvider {
@@ -22,7 +31,8 @@ public class Main extends JavaPlugin implements PermissionsProvider {
     private static Main instance;
     private static String MainPrefix = "§8[§eBuildSystem§8] ";
     public static MySQL_Config config;
-    public static HologramAPI holo;
+    public static HologramManager holo;
+    public static NpcManager npcAPI;
 
     public void onEnable() {
         instance = this;
@@ -32,16 +42,21 @@ public class Main extends JavaPlugin implements PermissionsProvider {
         registerMySQLConfig();
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aHologram-Manager wird gestartet");
-        holo = new HologramAPI(eu.mcone.bukkitcoresystem.CoreSystem.mysql1, "Build");
+        holo = new HologramManager(CoreSystem.mysql1, "Build");
+
+        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aNPC-Manager wird gestartet");
+        npcAPI = new NpcManager(CoreSystem.mysql1, "Build");
 
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aWEPIF PermissionsProvider loaded!");
 
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
+        getServer().getPluginManager().registerEvents(new SignChange(), this);
 
         getCommand("spawn").setExecutor(new SpawnCMD());
         getCommand("holo").setExecutor(new HoloCMD(holo));
+        getCommand("npc").setExecutor(new NpcCMD(npcAPI));
         getCommand("tpa").setExecutor(new TpaCMD());
         getCommand("tpaccept").setExecutor(new TpacceptCMD());
         getCommand("tpdeny").setExecutor(new TpdenyCMD());
@@ -57,6 +72,7 @@ public class Main extends JavaPlugin implements PermissionsProvider {
 
     public void onDisable() {
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§cPlugin wurde deaktiviert!");
+        npcAPI.unsetNPCs();
         holo.unsetHolograms();
     }
 

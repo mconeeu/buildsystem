@@ -1,9 +1,14 @@
+/*
+ * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem.listener;
 
 import eu.mcone.buildsystem.Main;
 import eu.mcone.buildsystem.util.Objective;
-import eu.mcone.bukkitcoresystem.CoreSystem;
-import eu.mcone.bukkitcoresystem.player.CorePlayer;
+import eu.mcone.coresystem.bukkit.CoreSystem;
+import eu.mcone.coresystem.bukkit.player.CorePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;

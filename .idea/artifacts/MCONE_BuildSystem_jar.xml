@@ -2,7 +2,7 @@
   <artifact type="jar" build-on-make="true" name="MCONE-BuildSystem:jar">
     <output-path>$PROJECT_DIR$/../../../Minecraft/localhost - server/Build/plugins</output-path>
     <root id="archive" name="MCONE-BuildSystem.jar">
-      <element id="module-output" name="MCONE-BuildSystem" />
+      <element id="module-output" name="mcone-buildsystem" />
     </root>
   </artifact>
 </component>

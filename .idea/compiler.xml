@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="MCONE-BuildSystem" />
+        <module name="mcone-buildsystem" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="MCONE-BuildSystem" target="1.8" />
+      <module name="mcone-buildsystem" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

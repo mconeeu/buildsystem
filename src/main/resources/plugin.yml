@@ -11,6 +11,9 @@ commands:
   holo:
     description: Setze die einzelnen Hologramme
     permission: system.bukkit.holo
+  npc:
+    description: Setze NPCs
+    permission: system.bukkit.npc
   tpa:
     description: Schickt eine Teleportanfrage
   tpaccept:

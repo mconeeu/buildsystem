@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem.command;
 
 import eu.mcone.buildsystem.Main;
-import eu.mcone.bukkitcoresystem.CoreSystem;
-import eu.mcone.bukkitcoresystem.util.LocationFactory;
+import eu.mcone.coresystem.bukkit.CoreSystem;
+import eu.mcone.coresystem.bukkit.util.LocationFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -16,8 +21,8 @@ public class SpawnCMD implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (!CoreSystem.cooldown.canExecute(this.getClass(), p)) return true;
-            CoreSystem.cooldown.addPlayer(p.getUniqueId(), this.getClass());
+            if (!CoreSystem.getInstance().getCooldownSystem().canExecute(this.getClass(), p)) return true;
+            CoreSystem.getInstance().getCooldownSystem().addPlayer(p.getUniqueId(), this.getClass());
 
             if (args.length == 0) {
                 Location loc = LocationFactory.getConfigLocation(Main.config, "Location-Spawn");

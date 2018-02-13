@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MCONE-BuildSystem.iml" filepath="$PROJECT_DIR$/MCONE-BuildSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mcone-buildsystem.iml" filepath="$PROJECT_DIR$/mcone-buildsystem.iml" />
     </modules>
   </component>
 </project>

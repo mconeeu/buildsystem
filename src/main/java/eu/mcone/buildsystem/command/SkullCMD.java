@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2017 Dominik L., Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
  * You are not allowed to decompile the code
  */
 
 package eu.mcone.buildsystem.command;
 
-import eu.mcone.bukkitcoresystem.CoreSystem;
+import eu.mcone.coresystem.bukkit.CoreSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -20,8 +20,8 @@ public class SkullCMD implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player p =(Player) sender;
-			if (!CoreSystem.cooldown.canExecute(this.getClass(), p)) return true;
-			CoreSystem.cooldown.addPlayer(p.getUniqueId(), this.getClass());
+			if (!CoreSystem.getInstance().getCooldownSystem().canExecute(this.getClass(), p)) return true;
+			CoreSystem.getInstance().getCooldownSystem().addPlayer(p.getUniqueId(), this.getClass());
 
 			if (p.hasPermission("build.skull")) {
 				if (args.length == 1) {
