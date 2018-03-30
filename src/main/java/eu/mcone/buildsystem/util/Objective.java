@@ -5,15 +5,15 @@
 
 package eu.mcone.buildsystem.util;
 
-import eu.mcone.coresystem.bukkit.player.CorePlayer;
+import eu.mcone.coresystem.bukkit.scoreboard.CoreObjective;
 import org.bukkit.scoreboard.DisplaySlot;
 
-public class Objective extends eu.mcone.coresystem.bukkit.scoreboard.Objective {
+public class Objective extends CoreObjective {
 
     private String world;
 
-    public Objective(CorePlayer p) {
-        super(p, DisplaySlot.SIDEBAR, "Plot", "BuildServer");
+    public Objective() {
+        super(DisplaySlot.SIDEBAR, "Plot", "BuildServer");
     }
 
     @Override

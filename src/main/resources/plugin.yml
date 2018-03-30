@@ -1,37 +1,25 @@
 name: MCONE-BuildSystem
 author: Rufus Maiwald
 version: 1.0.1-SNAPSHOT
-main: eu.mcone.buildsystem.Main
+main: eu.mcone.buildsystem.BuildSystem
 depend: [MCONE-BukkitCoreSystem]
 softdepend: [WorldEdit]
 
 commands:
-  spawn:
-    description: Teleportiert den Spieler zum Spawn
-  holo:
-    description: Setze die einzelnen Hologramme
-    permission: system.bukkit.holo
-  npc:
-    description: Setze NPCs
-    permission: system.bukkit.npc
   tpa:
-    description: Schickt eine Teleportanfrage
+    description: Request teleportaition
   tpaccept:
-    description: Akzeptiert eine Teleportanfrage
+    description: Accept teleport
   tpdeny:
-    description: Verweigert eine Teleportanfrage
+    description: Deny teleport
   skull:
-    description: Gibt den Kopf eines Spielers
+    aliases: head
+    description: Gives an head frm a player
     permission: build.skull
 
 permissions:
   build:
-    description: Lobby Main Permission
+    description: Build Main Permission
     children:
-      build.set:
-        description: Allows to set several things
-        children:
-          build.set.spawn:
-            description: Allows to set the spawn
       build.skull:
         description: Allows to get a players skull

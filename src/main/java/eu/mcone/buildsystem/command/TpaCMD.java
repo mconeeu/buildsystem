@@ -5,8 +5,7 @@
 
 package eu.mcone.buildsystem.command;
 
-import eu.mcone.buildsystem.Main;
-import javafx.scene.chart.BubbleChart;
+import eu.mcone.buildsystem.BuildSystem;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -33,16 +32,16 @@ public class TpaCMD implements CommandExecutor {
                 Player t = Bukkit.getPlayer(args[0]);
                 if (t != null) {
                     if (players.containsKey(p.getName()) && players.get(p.getName()).contains(t.getName())) {
-                        p.sendMessage(Main.config.getConfigValue("System-Prefix") + "§4Du hast diesem Spieler bereits eine Teleportanfrage geschickt!");
+                        p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Du hast diesem Spieler bereits eine Teleportanfrage geschickt!");
                     } else if (t == p) {
-                        p.sendMessage(Main.config.getConfigValue("System-Prefix") + "§4Du kannst dir nicht selbst eine Teleportanfrage schicken!");
+                        p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Du kannst dir nicht selbst eine Teleportanfrage schicken!");
                     } else {
                         List<String> requests = players.getOrDefault(p.getName(), new ArrayList<>());
                         requests.add(t.getName());
                         players.put(p.getName(), requests);
 
-                        t.sendMessage(Main.config.getConfigValue("System-Prefix") + "§7Du hast eine Teleportanfrage von §f"+p.getName()+"§7 erhalten!");
-                        TextComponent tc0 = new TextComponent(TextComponent.fromLegacyText(Main.config.getConfigValue("System-Prefix")));
+                        t.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§7Du hast eine Teleportanfrage von §f"+p.getName()+"§7 erhalten!");
+                        TextComponent tc0 = new TextComponent(TextComponent.fromLegacyText(BuildSystem.config.getConfigValue("System-Prefix")));
 
                         TextComponent tc = new TextComponent();
                         tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept "+p.getName()));
@@ -57,13 +56,13 @@ public class TpaCMD implements CommandExecutor {
                         tc.addExtra(tc1);
                         tc0.addExtra(tc);
                         t.spigot().sendMessage(tc0);
-                        p.sendMessage(Main.config.getConfigValue("System-Prefix") + "§2Du hast §a"+args[0]+"§2 eine Teleportanfrage geschickt!");
+                        p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§2Du hast §a"+args[0]+"§2 eine Teleportanfrage geschickt!");
                     }
                 } else {
-                    p.sendMessage(Main.config.getConfigValue("System-Prefix") + "§4Dieser Spieler ist nicht online!");
+                    p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Dieser Spieler ist nicht online!");
                 }
             } else {
-                p.sendMessage(Main.config.getConfigValue("System-Prefix") + "§4Bitte benutze: §c/tpa <Spieler>");
+                p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Bitte benutze: §c/tpa <Spieler>");
             }
         }
         return true;
