@@ -6,18 +6,21 @@
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
-import eu.mcone.buildsystem.command.*;
+import eu.mcone.buildsystem.command.SkullCMD;
+import eu.mcone.buildsystem.command.TpaCMD;
+import eu.mcone.buildsystem.command.TpacceptCMD;
+import eu.mcone.buildsystem.command.TpdenyCMD;
 import eu.mcone.buildsystem.listener.PlayerChangedWorld;
 import eu.mcone.buildsystem.listener.PlayerJoin;
 import eu.mcone.buildsystem.listener.SignChange;
 import eu.mcone.buildsystem.util.Objective;
-import eu.mcone.coresystem.bukkit.CoreSystem;
-import eu.mcone.coresystem.bukkit.hologram.HologramManager;
-import eu.mcone.coresystem.bukkit.npc.NpcManager;
-import eu.mcone.coresystem.bukkit.player.CorePlayer;
-import eu.mcone.coresystem.bukkit.util.LocationManager;
-import eu.mcone.coresystem.lib.mysql.MySQL_Config;
-import eu.mcone.coresystem.lib.player.Group;
+import eu.mcone.coresystem.api.bukkit.CoreSystem;
+import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
+import eu.mcone.coresystem.api.bukkit.npc.NpcManager;
+import eu.mcone.coresystem.api.bukkit.player.BukkitCorePlayer;
+import eu.mcone.coresystem.api.bukkit.world.LocationManager;
+import eu.mcone.coresystem.api.core.mysql.MySQL_Config;
+import eu.mcone.coresystem.api.core.player.Group;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -46,17 +49,17 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aProviding WEPIF Permissions!");
 
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aMySQL Config wird geladen!");
-        config = new MySQL_Config(CoreSystem.mysql3, "Build", 500);
+        config = new MySQL_Config(CoreSystem.getInstance().getMySQL(3), "Build", 500);
         registerMySQLConfig();
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aHologram-Manager wird gestartet");
-        hologramManager = new HologramManager(CoreSystem.mysql1, "Build");
+        hologramManager = CoreSystem.getInstance().inititaliseHologramManager("Build");
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aNPC-Manager wird gestartet");
-        npcManager = new NpcManager(CoreSystem.mysql1, "Build");
+        npcManager = CoreSystem.getInstance().initialiseNpcManager("Build");
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aLocationManager witd initiiert");
-        locationManager = new LocationManager("Build").downloadLocations();
+        locationManager = CoreSystem.getInstance().initialiseLocationManager("Build").downloadLocations();
 
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
@@ -70,7 +73,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
-        for (CorePlayer p : CoreSystem.getOnlineCorePlayers()) {
+        for (BukkitCorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
             hologramManager.setHolograms(p.bukkit());
         }
@@ -95,17 +98,17 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
     @Override
     public boolean hasPermission(String name, String permission) {
-        return CoreSystem.getCorePlayer(name).hasPermission(permission);
+        return CoreSystem.getInstance().getCorePlayer(name).hasPermission(permission);
     }
 
     @Override
     public boolean hasPermission(String worldName, String name, String permission) {
-        return CoreSystem.getCorePlayer(name).hasPermission(permission);
+        return CoreSystem.getInstance().getCorePlayer(name).hasPermission(permission);
     }
 
     @Override
     public boolean inGroup(String name, String group) {
-        for (Group g : CoreSystem.getCorePlayer(name).getGroups()) {
+        for (Group g : CoreSystem.getInstance().getCorePlayer(name).getGroups()) {
             if (g.getName().equalsIgnoreCase(group)) return true;
         }
         return false;
@@ -113,7 +116,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
     @Override
     public String[] getGroups(String name) {
-        Set<String> groups = CoreSystem.getCorePlayer(name).getPermissions();
+        Set<String> groups = CoreSystem.getInstance().getCorePlayer(name).getPermissions();
         return groups.toArray(new String[groups.size()]);
     }
 
@@ -131,7 +134,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
     @Override
     public boolean inGroup(OfflinePlayer offlinePlayer, String group) {
-        CorePlayer p = CoreSystem.getCorePlayer(offlinePlayer.getPlayer());
+        BukkitCorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
         if (p != null) {
             for (Group g : p.getGroups()) {
                 if (g.getName().equalsIgnoreCase(group)) return true;
@@ -142,7 +145,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
     @Override
     public String[] getGroups(OfflinePlayer offlinePlayer) {
-        CorePlayer p = CoreSystem.getCorePlayer(offlinePlayer.getPlayer());
+        BukkitCorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
         if (p != null) {
             Set<String> groups = p.getPermissions();
             return groups.toArray(new String[groups.size()]);

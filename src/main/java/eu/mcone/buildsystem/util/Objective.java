@@ -5,7 +5,7 @@
 
 package eu.mcone.buildsystem.util;
 
-import eu.mcone.coresystem.bukkit.scoreboard.CoreObjective;
+import eu.mcone.coresystem.api.bukkit.scoreboard.CoreObjective;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public class Objective extends CoreObjective {
