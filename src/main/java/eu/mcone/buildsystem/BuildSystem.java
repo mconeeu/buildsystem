@@ -19,14 +19,15 @@ import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
 import eu.mcone.coresystem.api.bukkit.npc.NpcManager;
 import eu.mcone.coresystem.api.bukkit.player.BukkitCorePlayer;
 import eu.mcone.coresystem.api.bukkit.world.LocationManager;
-import eu.mcone.coresystem.api.core.mysql.MySQL_Config;
 import eu.mcone.coresystem.api.core.player.Group;
+import eu.mcone.coresystem.api.core.translation.TranslationField;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public class BuildSystem extends JavaPlugin implements PermissionsProvider {
@@ -34,7 +35,6 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
     @Getter
     private static BuildSystem instance;
     private static String MainPrefix = "§8[§eBuildSystem§8] ";
-    public static MySQL_Config config;
 
     @Getter
     private HologramManager hologramManager;
@@ -45,12 +45,9 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
     public void onEnable() {
         instance = this;
+        registerTranslations();
 
         getServer().getConsoleSender().sendMessage(MainPrefix + "§aProviding WEPIF Permissions!");
-
-        getServer().getConsoleSender().sendMessage(MainPrefix + "§aMySQL Config wird geladen!");
-        config = new MySQL_Config(CoreSystem.getInstance().getMySQL(3), "Build", 500);
-        registerMySQLConfig();
 
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aHologram-Manager wird gestartet");
         hologramManager = CoreSystem.getInstance().inititaliseHologramManager("Build");
@@ -85,15 +82,12 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
         hologramManager.unsetHolograms();
     }
 
-    private void registerMySQLConfig() {
-        //create table
-        config.createTable();
-
-        //system
-        config.insertMySQLConfig("System-Prefix", "§8[§7§l!§8] §eBuild §8» §7");
-
-        //store
-        config.store();
+    private void registerTranslations() {
+        CoreSystem.getInstance().getTranslationManager().insertIfNotExists(
+                new HashMap<String, TranslationField>(){{
+                    put("System-Prefix", new TranslationField("§8[§7§l!§8] §eBuild §8» §7"));
+                }}
+        );
     }
 
     @Override

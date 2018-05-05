@@ -5,7 +5,7 @@
 
 package eu.mcone.buildsystem.command;
 
-import eu.mcone.buildsystem.BuildSystem;
+import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,17 +23,17 @@ public class TpdenyCMD implements CommandExecutor {
 
                 if (t != null) {
                     if (TpaCMD.players.containsKey(t.getName()) && TpaCMD.players.get(t.getName()).contains(p.getName())) {
-                        p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§7Du hast die Teleportanfrage von §f"+t.getName()+"§7 abgelehnt!");
-                        t.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§f"+args[0]+"§7 hat deine Anfrage §cabgelehnt§7!");
+                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§7Du hast die Teleportanfrage von §f"+t.getName()+"§7 abgelehnt!");
+                        t.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§f"+args[0]+"§7 hat deine Anfrage §cabgelehnt§7!");
                         TpaCMD.players.get(t.getName()).remove(p.getName());
                     } else {
-                        p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Dieser Spieler hat dir keine Teleportanfrage geschickt!");
+                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Dieser Spieler hat dir keine Teleportanfrage geschickt!");
                     }
                 } else {
-                    p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Dieser Spieler ist nicht online!");
+                    p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Dieser Spieler ist nicht online!");
                 }
             } else {
-                p.sendMessage(BuildSystem.config.getConfigValue("System-Prefix") + "§4Bitte benutze: §c/tpdeny <Spieler>");
+                p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Bitte benutze: §c/tpdeny <Spieler>");
             }
         }
         return true;
