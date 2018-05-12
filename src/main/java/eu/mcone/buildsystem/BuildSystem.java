@@ -72,14 +72,12 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
 
         for (BukkitCorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
-            hologramManager.setHolograms(p.bukkit());
         }
     }
 
     public void onDisable() {
         Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§cPlugin wurde deaktiviert!");
         npcManager.unsetNPCs();
-        hologramManager.unsetHolograms();
     }
 
     private void registerTranslations() {
