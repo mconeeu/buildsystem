@@ -14,6 +14,7 @@ import eu.mcone.buildsystem.listener.PlayerChangedWorld;
 import eu.mcone.buildsystem.listener.PlayerJoin;
 import eu.mcone.buildsystem.listener.SignChange;
 import eu.mcone.buildsystem.util.Objective;
+import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
 import eu.mcone.coresystem.api.bukkit.npc.NpcManager;
@@ -22,20 +23,21 @@ import eu.mcone.coresystem.api.bukkit.world.LocationManager;
 import eu.mcone.coresystem.api.core.player.Group;
 import eu.mcone.coresystem.api.core.translation.TranslationField;
 import lombok.Getter;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Set;
 
-public class BuildSystem extends JavaPlugin implements PermissionsProvider {
+public class BuildSystem extends CorePlugin implements PermissionsProvider {
+
+    public BuildSystem() {
+        super("BuildSystem", ChatColor.YELLOW, "build.prefix");
+    }
 
     @Getter
     private static BuildSystem instance;
-    private static String MainPrefix = "§8[§eBuildSystem§8] ";
-
     @Getter
     private HologramManager hologramManager;
     @Getter
@@ -47,18 +49,18 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
         instance = this;
         registerTranslations();
 
-        getServer().getConsoleSender().sendMessage(MainPrefix + "§aProviding WEPIF Permissions!");
+        sendConsoleMessage("§aProviding WEPIF Permissions!");
 
-        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aHologram-Manager wird gestartet");
+        sendConsoleMessage("§aHologram-Manager wird gestartet");
         hologramManager = CoreSystem.getInstance().inititaliseHologramManager("Build");
 
-        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aNPC-Manager wird gestartet");
+        sendConsoleMessage("§aNPC-Manager wird gestartet");
         npcManager = CoreSystem.getInstance().initialiseNpcManager("Build");
 
-        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aLocationManager witd initiiert");
+        sendConsoleMessage("§aLocationManager witd initiiert");
         locationManager = CoreSystem.getInstance().initialiseLocationManager("Build").downloadLocations();
 
-        getServer().getConsoleSender().sendMessage(MainPrefix + "§aListener und Events werden geöaden!");
+        sendConsoleMessage("§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new SignChange(), this);
@@ -68,7 +70,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
         getCommand("tpdeny").setExecutor(new TpdenyCMD());
         getCommand("skull").setExecutor(new SkullCMD());
 
-        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
+        sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
         for (BukkitCorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
@@ -76,14 +78,14 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
     }
 
     public void onDisable() {
-        Bukkit.getServer().getConsoleSender().sendMessage(MainPrefix + "§cPlugin wurde deaktiviert!");
+        sendConsoleMessage("§cPlugin wurde deaktiviert!");
         npcManager.unsetNPCs();
     }
 
     private void registerTranslations() {
         CoreSystem.getInstance().getTranslationManager().insertIfNotExists(
                 new HashMap<String, TranslationField>(){{
-                    put("System-Prefix", new TranslationField("§8[§7§l!§8] §eBuild §8» §7"));
+                    put("build.prefix", new TranslationField("§8[§7§l!§8] §eBuild §8» §7"));
                 }}
         );
     }
@@ -109,7 +111,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
     @Override
     public String[] getGroups(String name) {
         Set<String> groups = CoreSystem.getInstance().getCorePlayer(name).getPermissions();
-        return groups.toArray(new String[groups.size()]);
+        return groups.toArray(new String[0]);
     }
 
     @Override
@@ -140,7 +142,7 @@ public class BuildSystem extends JavaPlugin implements PermissionsProvider {
         BukkitCorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
         if (p != null) {
             Set<String> groups = p.getPermissions();
-            return groups.toArray(new String[groups.size()]);
+            return groups.toArray(new String[0]);
         }
 
         return null;
