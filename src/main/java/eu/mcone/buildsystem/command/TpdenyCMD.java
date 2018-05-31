@@ -5,7 +5,7 @@
 
 package eu.mcone.buildsystem.command;
 
-import eu.mcone.coresystem.api.bukkit.CoreSystem;
+import eu.mcone.buildsystem.BuildSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,17 +23,17 @@ public class TpdenyCMD implements CommandExecutor {
 
                 if (t != null) {
                     if (TpaCMD.players.containsKey(t.getName()) && TpaCMD.players.get(t.getName()).contains(p.getName())) {
-                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§7Du hast die Teleportanfrage von §f"+t.getName()+"§7 abgelehnt!");
-                        t.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§f"+args[0]+"§7 hat deine Anfrage §cabgelehnt§7!");
+                        BuildSystem.getInstance().getMessager().send(p, "§7Du hast die Teleportanfrage von §f"+t.getName()+"§7 abgelehnt!");
+                        BuildSystem.getInstance().getMessager().send(t, "§f"+args[0]+"§7 hat deine Anfrage §cabgelehnt§7!");
                         TpaCMD.players.get(t.getName()).remove(p.getName());
                     } else {
-                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Dieser Spieler hat dir keine Teleportanfrage geschickt!");
+                        BuildSystem.getInstance().getMessager().send(p, "§4Dieser Spieler hat dir keine Teleportanfrage geschickt!");
                     }
                 } else {
-                    p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Dieser Spieler ist nicht online!");
+                    BuildSystem.getInstance().getMessager().send(p, "§4Dieser Spieler ist nicht online!");
                 }
             } else {
-                p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Bitte benutze: §c/tpdeny <Spieler>");
+                BuildSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/tpdeny <Spieler>");
             }
         }
         return true;

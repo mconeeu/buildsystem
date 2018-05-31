@@ -5,8 +5,8 @@
 
 package eu.mcone.buildsystem.command;
 
+import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,17 +30,17 @@ public class SkullCMD implements CommandExecutor {
 					skull.setItemMeta(sm);
 					p.getInventory().addItem(skull);
 
-					p.sendMessage("§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
+					BuildSystem.getInstance().getMessager().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
 				} else {
 
-					p.sendMessage("§4Bitte benutze: §c/skull <Spieler>");
+					BuildSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/skull <Spieler>");
 				}
 
 			} else {
-				p.sendMessage("§4Du haste Berechtigung diesen Befehl!");
+				BuildSystem.getInstance().getMessager().send(p, "§4Du haste Berechtigung diesen Befehl!");
 			}
 		} else {
-			Bukkit.getConsoleSender().sendMessage("§4Dieser Befehl kann nur von einem Spieler ausgeführt werden!");
+            BuildSystem.getInstance().sendConsoleMessage("§4Dieser Befehl kann nur von einem Spieler ausgeführt werden!");
 			return true;
 		}
 		return false;

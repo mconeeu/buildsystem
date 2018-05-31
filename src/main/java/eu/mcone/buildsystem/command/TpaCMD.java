@@ -5,6 +5,7 @@
 
 package eu.mcone.buildsystem.command;
 
+import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -35,15 +36,15 @@ public class TpaCMD implements CommandExecutor {
                 Player t = Bukkit.getPlayer(args[0]);
                 if (t != null) {
                     if (players.containsKey(p.getName()) && players.get(p.getName()).contains(t.getName())) {
-                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Du hast diesem Spieler bereits eine Teleportanfrage geschickt!");
+                        BuildSystem.getInstance().getMessager().send(p, "§4Du hast diesem Spieler bereits eine Teleportanfrage geschickt!");
                     } else if (t == p) {
-                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Du kannst dir nicht selbst eine Teleportanfrage schicken!");
+                        BuildSystem.getInstance().getMessager().send(p, "§4Du kannst dir nicht selbst eine Teleportanfrage schicken!");
                     } else {
                         List<String> requests = players.getOrDefault(p.getName(), new ArrayList<>());
                         requests.add(t.getName());
                         players.put(p.getName(), requests);
 
-                        t.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§7Du hast eine Teleportanfrage von §f"+p.getName()+"§7 erhalten!");
+                        BuildSystem.getInstance().getMessager().send(t, "§7Du hast eine Teleportanfrage von §f"+p.getName()+"§7 erhalten!");
                         TextComponent tc0 = new TextComponent(TextComponent.fromLegacyText(CoreSystem.getInstance().getTranslationManager().get("build.prefix")));
 
                         TextComponent tc = new TextComponent();
@@ -59,13 +60,13 @@ public class TpaCMD implements CommandExecutor {
                         tc.addExtra(tc1);
                         tc0.addExtra(tc);
                         t.spigot().sendMessage(tc0);
-                        p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§2Du hast §a"+args[0]+"§2 eine Teleportanfrage geschickt!");
+                        BuildSystem.getInstance().getMessager().send(p, "§2Du hast §a"+args[0]+"§2 eine Teleportanfrage geschickt!");
                     }
                 } else {
-                    p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Dieser Spieler ist nicht online!");
+                    BuildSystem.getInstance().getMessager().send(p, "§4Dieser Spieler ist nicht online!");
                 }
             } else {
-                p.sendMessage(CoreSystem.getInstance().getTranslationManager().get("build.prefix") + "§4Bitte benutze: §c/tpa <Spieler>");
+                BuildSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/tpa <Spieler>");
             }
         }
         return true;
