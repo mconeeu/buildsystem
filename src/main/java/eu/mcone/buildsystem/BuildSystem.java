@@ -13,6 +13,7 @@ import eu.mcone.buildsystem.command.TpdenyCMD;
 import eu.mcone.buildsystem.listener.PlayerChangedWorld;
 import eu.mcone.buildsystem.listener.PlayerJoin;
 import eu.mcone.buildsystem.listener.SignChange;
+import eu.mcone.buildsystem.listener.WeatherChange;
 import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
@@ -64,6 +65,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new SignChange(), this);
+        getServer().getPluginManager().registerEvents(new WeatherChange(), this);
 
         getCommand("tpa").setExecutor(new TpaCMD());
         getCommand("tpaccept").setExecutor(new TpacceptCMD());

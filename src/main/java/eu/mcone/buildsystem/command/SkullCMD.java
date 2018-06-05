@@ -32,10 +32,8 @@ public class SkullCMD implements CommandExecutor {
 
 					BuildSystem.getInstance().getMessager().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
 				} else {
-
 					BuildSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/skull <Spieler>");
 				}
-
 			} else {
 				BuildSystem.getInstance().getMessager().send(p, "§4Du haste Berechtigung diesen Befehl!");
 			}
