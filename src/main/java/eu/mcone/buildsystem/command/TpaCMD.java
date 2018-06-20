@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class TpaCMD implements CommandExecutor {
 
-    public static Map<String, List<String>> players = new HashMap<>();
+    static Map<String, List<String>> players = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {

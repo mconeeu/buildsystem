@@ -20,7 +20,7 @@ import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
 import eu.mcone.coresystem.api.bukkit.npc.NpcManager;
 import eu.mcone.coresystem.api.bukkit.player.BukkitCorePlayer;
-import eu.mcone.coresystem.api.bukkit.world.LocationManager;
+import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
 import eu.mcone.coresystem.api.core.translation.TranslationField;
 import lombok.Getter;
@@ -44,10 +44,11 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
     @Getter
     private NpcManager npcManager;
     @Getter
-    private LocationManager locationManager;
+    private CoreWorld world;
 
     public void onEnable() {
         instance = this;
+        world = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         registerTranslations();
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
@@ -58,15 +59,13 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
         sendConsoleMessage("§aNPC-Manager wird gestartet");
         npcManager = CoreSystem.getInstance().initialiseNpcManager("Build");
 
-        sendConsoleMessage("§aLocationManager witd initiiert");
-        locationManager = CoreSystem.getInstance().initialiseLocationManager("Build").downloadLocations();
-
         sendConsoleMessage("§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new SignChange(), this);
         getServer().getPluginManager().registerEvents(new WeatherChange(), this);
 
+        CoreSystem.getInstance().enableSpawnCommand(world);
         getCommand("tpa").setExecutor(new TpaCMD());
         getCommand("tpaccept").setExecutor(new TpacceptCMD());
         getCommand("tpdeny").setExecutor(new TpdenyCMD());

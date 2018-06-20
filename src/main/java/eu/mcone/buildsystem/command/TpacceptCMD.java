@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TpacceptCMD implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (sender instanceof Player) {
@@ -23,8 +24,8 @@ public class TpacceptCMD implements CommandExecutor {
 
                 if (t != null) {
                     if (TpaCMD.players.containsKey(t.getName()) && TpaCMD.players.get(t.getName()).contains(p.getName())) {
-                        BuildSystem.getInstance().getMessager().send(p, "§2Du hast die Teleportanfrage von "+t.getName()+" angenommen! Teleportiere...");
-                        BuildSystem.getInstance().getMessager().send(t, "§a"+p.getName()+"§2 hat deine Anfrage angenommen! Du wirst teleportiert...");
+                        BuildSystem.getInstance().getMessager().send(p, "§2Du hast die Teleportanfrage von " + t.getName() + " angenommen! Teleportiere...");
+                        BuildSystem.getInstance().getMessager().send(t, "§a" + p.getName() + "§2 hat deine Anfrage angenommen! Du wirst teleportiert...");
                         t.teleport(p.getLocation());
                         TpaCMD.players.get(t.getName()).remove(p.getName());
                     } else {
@@ -39,4 +40,5 @@ public class TpacceptCMD implements CommandExecutor {
         }
         return true;
     }
+
 }
