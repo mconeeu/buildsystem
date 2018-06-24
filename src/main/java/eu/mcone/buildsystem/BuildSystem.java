@@ -18,7 +18,6 @@ import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
-import eu.mcone.coresystem.api.bukkit.npc.NpcManager;
 import eu.mcone.coresystem.api.bukkit.player.BukkitCorePlayer;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
@@ -42,8 +41,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
     @Getter
     private HologramManager hologramManager;
     @Getter
-    private NpcManager npcManager;
-    @Getter
     private CoreWorld world;
 
     public void onEnable() {
@@ -54,10 +51,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
         sendConsoleMessage("§aProviding WEPIF Permissions!");
 
         sendConsoleMessage("§aHologram-Manager wird gestartet");
-        hologramManager = CoreSystem.getInstance().inititaliseHologramManager("Build");
-
-        sendConsoleMessage("§aNPC-Manager wird gestartet");
-        npcManager = CoreSystem.getInstance().initialiseNpcManager("Build");
+        hologramManager = CoreSystem.getInstance().inititaliseHologramManager(this);
 
         sendConsoleMessage("§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
@@ -80,7 +74,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
     public void onDisable() {
         sendConsoleMessage("§cPlugin wurde deaktiviert!");
-        npcManager.unsetNPCs();
     }
 
     private void registerTranslations() {
