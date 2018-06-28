@@ -46,6 +46,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
     public void onEnable() {
         instance = this;
         world = CoreSystem.getInstance().getWorldManager().getWorld("plots");
+        CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
         registerTranslations();
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
