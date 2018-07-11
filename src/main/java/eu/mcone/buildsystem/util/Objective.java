@@ -5,6 +5,7 @@
 
 package eu.mcone.buildsystem.util;
 
+import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.scoreboard.CoreObjective;
 import org.bukkit.scoreboard.DisplaySlot;
 
@@ -17,28 +18,25 @@ public class Objective extends CoreObjective {
     }
 
     @Override
-    public void register() {
-        world = "§f§o"+getPlayer().bukkit().getWorld().getName();
+    public void onRegister(CorePlayer player) {
+        world = "§f§o"+player.getWorld().getName();
 
-        org.bukkit.scoreboard.Objective o = getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        o.setDisplayName("§7§l⚔ §e§l§nBuild Server");
+        setDisplayName("§7§l⚔ §e§l§nBuild Server");
 
-        o.getScore("§0").setScore(7);
-        o.getScore("§7§oBenutze /plot help").setScore(6);
-        o.getScore("§7§ofür Hilfe").setScore(5);
-        o.getScore("§1").setScore(4);
-        o.getScore("§8» §7Welt:").setScore(3);
-        o.getScore(world).setScore(2);
-        o.getScore("§2").setScore(1);
-        o.getScore("§f§lMCONE.EU").setScore(0);
+        setScore(7, "");
+        setScore(6, "§7§oBenutze /plot help");
+        setScore(5, "§7§ofür Hilfe");
+        setScore(4, "");
+        setScore(3, "§8» §7Welt:");
+        setScore(2, "");
+        setScore(1, "");
+        setScore(0, "§f§lMCONE.EU");
     }
 
     @Override
-    public void reload() {
-        org.bukkit.scoreboard.Objective o = getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        getScoreboard().resetScores(world);
+    public void onReload(CorePlayer player) {
+        world = "§f§o"+player.getWorld().getName();
 
-        world = "§f§o"+getPlayer().bukkit().getWorld().getName();
-        o.getScore(world).setScore(2);
+        setScore(2, world);
     }
 }

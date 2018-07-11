@@ -17,42 +17,34 @@ import eu.mcone.buildsystem.listener.WeatherChange;
 import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
-import eu.mcone.coresystem.api.bukkit.hologram.HologramManager;
-import eu.mcone.coresystem.api.bukkit.player.BukkitCorePlayer;
+import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
-import eu.mcone.coresystem.api.core.translation.TranslationField;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Set;
 
 public class BuildSystem extends CorePlugin implements PermissionsProvider {
+
+    @Getter
+    private static BuildSystem instance;
+    @Getter
+    private CoreWorld world;
 
     public BuildSystem() {
         super("BuildSystem", ChatColor.YELLOW, "build.prefix");
     }
 
-    @Getter
-    private static BuildSystem instance;
-    @Getter
-    private HologramManager hologramManager;
-    @Getter
-    private CoreWorld world;
-
     public void onEnable() {
         instance = this;
         world = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
-        registerTranslations();
+        CoreSystem.getInstance().getTranslationManager().loadCategories(this);
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
-
-        sendConsoleMessage("§aHologram-Manager wird gestartet");
-        hologramManager = CoreSystem.getInstance().inititaliseHologramManager(this);
 
         sendConsoleMessage("§aListener und Events werden geöaden!");
         getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
@@ -68,21 +60,13 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
-        for (BukkitCorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
+        for (CorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
         }
     }
 
     public void onDisable() {
         sendConsoleMessage("§cPlugin wurde deaktiviert!");
-    }
-
-    private void registerTranslations() {
-        CoreSystem.getInstance().getTranslationManager().insertIfNotExists(
-                new HashMap<String, TranslationField>(){{
-                    put("build.prefix", new TranslationField("§8[§7§l!§8] §eBuild §8» §7"));
-                }}
-        );
     }
 
     @Override
@@ -123,7 +107,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
     @Override
     public boolean inGroup(OfflinePlayer offlinePlayer, String group) {
-        BukkitCorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
+        CorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
         if (p != null) {
             for (Group g : p.getGroups()) {
                 if (g.getName().equalsIgnoreCase(group)) return true;
@@ -134,7 +118,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
     @Override
     public String[] getGroups(OfflinePlayer offlinePlayer) {
-        BukkitCorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
+        CorePlayer p = CoreSystem.getInstance().getCorePlayer(offlinePlayer.getPlayer());
         if (p != null) {
             Set<String> groups = p.getPermissions();
             return groups.toArray(new String[0]);
