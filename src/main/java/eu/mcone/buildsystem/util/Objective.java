@@ -10,16 +10,12 @@ import eu.mcone.coresystem.api.bukkit.scoreboard.CoreSidebarObjective;
 
 public class Objective extends CoreSidebarObjective {
 
-    private String world;
-
     public Objective() {
         super("Plot-BuildServer");
     }
 
     @Override
     public void onRegister(CorePlayer player) {
-        world = "§f§o"+player.getWorld().getName();
-
         setDisplayName("§7§l⚔ §e§l§nBuild Server");
 
         setScore(7, "");
@@ -27,14 +23,13 @@ public class Objective extends CoreSidebarObjective {
         setScore(5, "§7§ofür Hilfe");
         setScore(4, "");
         setScore(3, "§8» §7Welt:");
-        setScore(2, "");
+        setScore(2, "§f§o"+player.getWorld().getName());
         setScore(1, "");
         setScore(0, "§f§lMCONE.EU");
     }
 
     @Override
     public void onReload(CorePlayer player) {
-        world = "§f§o"+player.getWorld().getName();
-        setScore(2, world);
+        setScore(2, "§f§o"+player.getWorld().getName());
     }
 }
