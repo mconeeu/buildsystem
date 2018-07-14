@@ -6,15 +6,14 @@
 package eu.mcone.buildsystem.util;
 
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
-import eu.mcone.coresystem.api.bukkit.scoreboard.CoreObjective;
-import org.bukkit.scoreboard.DisplaySlot;
+import eu.mcone.coresystem.api.bukkit.scoreboard.CoreSidebarObjective;
 
-public class Objective extends CoreObjective {
+public class Objective extends CoreSidebarObjective {
 
     private String world;
 
     public Objective() {
-        super(DisplaySlot.SIDEBAR, "Plot", "BuildServer");
+        super("Plot-BuildServer");
     }
 
     @Override
@@ -36,7 +35,6 @@ public class Objective extends CoreObjective {
     @Override
     public void onReload(CorePlayer player) {
         world = "§f§o"+player.getWorld().getName();
-
         setScore(2, world);
     }
 }
