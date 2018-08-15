@@ -56,13 +56,19 @@
         <dependency>
             <groupId>eu.mcone.coresystem</groupId>
             <artifactId>bukkit-api</artifactId>
-            <version>10.1.0-SNAPSHOT</version>
+            <version>10.1.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.1.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
