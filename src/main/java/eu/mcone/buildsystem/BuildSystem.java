@@ -35,7 +35,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
     private CoreWorld world;
 
     public BuildSystem() {
-        super("BuildSystem", ChatColor.YELLOW, "build.prefix");
+        super("buildsystem", ChatColor.YELLOW, "build.prefix");
     }
 
     public void onEnable() {
@@ -47,16 +47,19 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
         sendConsoleMessage("§aProviding WEPIF Permissions!");
 
         sendConsoleMessage("§aListener und Events werden geöaden!");
-        getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-        getServer().getPluginManager().registerEvents(new SignChange(), this);
-        getServer().getPluginManager().registerEvents(new WeatherChange(), this);
-
+        registerEvents(
+                new PlayerChangedWorld(),
+                new PlayerJoin(),
+                new SignChange(),
+                new WeatherChange()
+        );
+        registerCommands(
+                new SkullCMD(),
+                new TpacceptCMD(),
+                new TpaCMD(),
+                new TpdenyCMD()
+        );
         CoreSystem.getInstance().enableSpawnCommand(world);
-        getCommand("tpa").setExecutor(new TpaCMD());
-        getCommand("tpaccept").setExecutor(new TpacceptCMD());
-        getCommand("tpdeny").setExecutor(new TpdenyCMD());
-        getCommand("skull").setExecutor(new SkullCMD());
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 

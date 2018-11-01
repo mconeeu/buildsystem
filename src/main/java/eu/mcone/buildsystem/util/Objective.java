@@ -32,4 +32,5 @@ public class Objective extends CoreSidebarObjective {
     public void onReload(CorePlayer player) {
         setScore(2, "§f§o"+player.getWorld().getName());
     }
+
 }
