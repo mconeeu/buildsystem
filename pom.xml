@@ -50,6 +50,10 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>athion-repo</id>
+            <url>http://ci.athion.net/job/PlotSquared/ws/mvn/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -62,13 +66,19 @@
         <dependency>
             <groupId>eu.mcone.coresystem</groupId>
             <artifactId>bukkit-api</artifactId>
-            <version>10.1.2-SNAPSHOT</version>
+            <version>10.1.4-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.1.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.plotsquared</groupId>
+            <artifactId>plotsquared-api</artifactId>
+            <version>latest</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
