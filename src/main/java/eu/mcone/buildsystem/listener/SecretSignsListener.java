@@ -9,12 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class SignChange implements Listener {
+public class SecretSignsListener implements Listener {
 
     @EventHandler
     public void on(SignChangeEvent e) {
-        if ((e.getLine(0).equals("[secrets]")) && (e.getLine(1) != null))
-        {
+        if ((e.getLine(0).equals("[secrets]")) && (e.getLine(1) != null)) {
             String name = e.getLine(1);
 
             e.setLine(0, "§7»§c Secrets");

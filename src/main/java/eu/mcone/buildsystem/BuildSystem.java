@@ -10,10 +10,9 @@ import eu.mcone.buildsystem.command.SkullCMD;
 import eu.mcone.buildsystem.command.TpaCMD;
 import eu.mcone.buildsystem.command.TpacceptCMD;
 import eu.mcone.buildsystem.command.TpdenyCMD;
-import eu.mcone.buildsystem.listener.PlayerChangedWorld;
-import eu.mcone.buildsystem.listener.PlayerJoin;
-import eu.mcone.buildsystem.listener.SignChange;
-import eu.mcone.buildsystem.listener.WeatherChange;
+import eu.mcone.buildsystem.listener.GeneralPlayerListener;
+import eu.mcone.buildsystem.listener.SecretSignsListener;
+import eu.mcone.buildsystem.listener.WeatherChangeListener;
 import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
@@ -48,10 +47,9 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
         sendConsoleMessage("§aListener und Events werden geöaden!");
         registerEvents(
-                new PlayerChangedWorld(),
-                new PlayerJoin(),
-                new SignChange(),
-                new WeatherChange()
+                new GeneralPlayerListener(),
+                new SecretSignsListener(),
+                new WeatherChangeListener()
         );
         registerCommands(
                 new SkullCMD(),

@@ -5,18 +5,6 @@ main: eu.mcone.buildsystem.BuildSystem
 depend: [MCONE-BukkitCoreSystem]
 softdepend: [WorldEdit]
 
-commands:
-  tpa:
-    description: Request teleportaition
-  tpaccept:
-    description: Accept teleport
-  tpdeny:
-    description: Deny teleport
-  skull:
-    aliases: head
-    description: Gives an head frm a player
-    permission: build.skull
-
 permissions:
   build:
     description: Build Main Permission
