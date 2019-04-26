@@ -7,9 +7,6 @@ package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
 import eu.mcone.buildsystem.command.SkullCMD;
-import eu.mcone.buildsystem.command.TpaCMD;
-import eu.mcone.buildsystem.command.TpacceptCMD;
-import eu.mcone.buildsystem.command.TpdenyCMD;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
@@ -52,12 +49,11 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
                 new WeatherChangeListener()
         );
         registerCommands(
-                new SkullCMD(),
-                new TpacceptCMD(),
-                new TpaCMD(),
-                new TpdenyCMD()
+                new SkullCMD()
         );
-        CoreSystem.getInstance().enableSpawnCommand(world);
+        CoreSystem.getInstance().enableSpawnCommand(this, world, 0);
+        CoreSystem.getInstance().enableHomeSystem(this, 0);
+        CoreSystem.getInstance().enableTpaSystem(this, 0);
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
