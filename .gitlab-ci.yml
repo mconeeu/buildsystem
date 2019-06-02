@@ -11,6 +11,8 @@ variables:
 # Because some enforcer rules might check dependency convergence and class duplications
 # we use `test-compile` here instead of `validate`, so the correct classpath is picked up.
 .validate: &validate
+  tags:
+    - maven
   stage: build
   script:
     - 'mvn $MAVEN_CLI_OPTS test-compile'
@@ -18,6 +20,8 @@ variables:
 # For merge requests do not `deploy` but only run `verify`.
 # See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 .verify: &verify
+  tags:
+    - maven
   stage: test
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'

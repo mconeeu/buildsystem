@@ -10,10 +10,13 @@ import eu.mcone.buildsystem.command.SkullCMD;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
+import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
+import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManager;
+import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManagerGetter;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
 import lombok.Getter;
@@ -21,14 +24,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
+import java.util.*;
 
-public class BuildSystem extends CorePlugin implements PermissionsProvider {
+public class BuildSystem extends CorePlugin implements PermissionsProvider, HomeManagerGetter {
 
     @Getter
     private static BuildSystem instance;
     @Getter
     private CoreWorld world;
+    private List<BuildPlayer> players;
 
     public BuildSystem() {
         super("buildsystem", ChatColor.YELLOW, "build.prefix");
@@ -36,6 +40,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
 
     public void onEnable() {
         instance = this;
+        players = new ArrayList<>();
         world = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
         CoreSystem.getInstance().getTranslationManager().loadCategories(this);
@@ -52,14 +57,15 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
                 new SkullCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, world, 0);
-        CoreSystem.getInstance().enableHomeSystem(this, 0);
+        CoreSystem.getInstance().enableHomeSystem(this, this, 0);
         CoreSystem.getInstance().enableTpaSystem(this, 0);
-
-        sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
 
         for (CorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
+            new BuildPlayer(p);
         }
+
+        sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
     }
 
     public void onDisable() {
@@ -122,6 +128,41 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider {
         }
 
         return null;
+    }
+
+    public BuildPlayer getBuildPlayer(UUID uuid) {
+        for (BuildPlayer sp : players) {
+            if (sp.getCorePlayer().getUuid().equals(uuid)) {
+                return sp;
+            }
+        }
+        return null;
+    }
+
+    public BuildPlayer getBuildPlayer(String name) {
+        for (BuildPlayer sp : players) {
+            if (sp.getCorePlayer().getName().equals(name)) {
+                return sp;
+            }
+        }
+        return null;
+    }
+
+    public Collection<BuildPlayer> getBuildPlayers() {
+        return players;
+    }
+
+    public void registerBuildPlayer(BuildPlayer sp) {
+        players.add(sp);
+    }
+
+    public void unregisterBuildPlayer(BuildPlayer sp) {
+        players.remove(sp);
+    }
+
+    @Override
+    public HomeManager getHomeManager(Player player) {
+        return getBuildPlayer(player.getUniqueId());
     }
 
 }
