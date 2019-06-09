@@ -14,13 +14,14 @@ import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.buildsystem.util.Objective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
+import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManager;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManagerGetter;
+import eu.mcone.coresystem.api.bukkit.spawnable.ListMode;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -30,18 +31,21 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
 
     @Getter
     private static BuildSystem instance;
+
     @Getter
-    private CoreWorld world;
+    private eu.mcone.coresystem.api.bukkit.world.BuildSystem buildSystem;
+    @Getter
+    private CoreWorld plotWorld;
     private List<BuildPlayer> players;
 
     public BuildSystem() {
-        super("buildsystem", ChatColor.YELLOW, "build.prefix");
+        super(Gamemode.BUILD, "build.prefix");
     }
 
     public void onEnable() {
         instance = this;
         players = new ArrayList<>();
-        world = CoreSystem.getInstance().getWorldManager().getWorld("plots");
+        plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
         CoreSystem.getInstance().getTranslationManager().loadCategories(this);
 
@@ -56,9 +60,17 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         registerCommands(
                 new SkullCMD()
         );
-        CoreSystem.getInstance().enableSpawnCommand(this, world, 0);
+        CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);
         CoreSystem.getInstance().enableTpaSystem(this, 0);
+
+        sendConsoleMessage("§aBuildSystem wird geladen!");
+        buildSystem = CoreSystem.getInstance().initialiseBuildSystem(
+                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.BLOCK_BREAK,
+                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.BLOCK_PLACE,
+                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.INTERACT
+        );
+        buildSystem.setWorlds(ListMode.BLACKLIST, plotWorld.bukkit());
 
         for (CorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
             p.getScoreboard().setNewObjective(new Objective());
