@@ -143,18 +143,18 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     }
 
     public BuildPlayer getBuildPlayer(UUID uuid) {
-        for (BuildPlayer sp : players) {
-            if (sp.getCorePlayer().getUuid().equals(uuid)) {
-                return sp;
+        for (BuildPlayer bp : players) {
+            if (bp.getCorePlayer().getUuid().equals(uuid)) {
+                return bp;
             }
         }
         return null;
     }
 
     public BuildPlayer getBuildPlayer(String name) {
-        for (BuildPlayer sp : players) {
-            if (sp.getCorePlayer().getName().equals(name)) {
-                return sp;
+        for (BuildPlayer bp : players) {
+            if (bp.getCorePlayer().getName().equals(name)) {
+                return bp;
             }
         }
         return null;

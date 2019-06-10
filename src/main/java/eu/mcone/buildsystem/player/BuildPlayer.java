@@ -9,6 +9,7 @@ public class BuildPlayer extends GamePlayerData<PlayerDataProfile> {
 
     public BuildPlayer(CorePlayer player) {
         super(player);
+        BuildSystem.getInstance().registerBuildPlayer(this);
     }
 
     @Override
