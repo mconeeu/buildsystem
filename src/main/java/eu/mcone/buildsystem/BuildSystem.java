@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * Copyright (c) 2017 - 2019 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
  * You are not allowed to decompile the code
  */
 
@@ -11,7 +11,7 @@ import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
 import eu.mcone.buildsystem.player.BuildPlayer;
-import eu.mcone.buildsystem.util.Objective;
+import eu.mcone.buildsystem.util.SidebarObjective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
@@ -71,9 +71,10 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
                 eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.INTERACT
         );
         buildSystem.setWorlds(ListMode.BLACKLIST, plotWorld.bukkit());
+        buildSystem.setUseBuildPermissionNodes(true);
 
         for (CorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
-            p.getScoreboard().setNewObjective(new Objective());
+            p.getScoreboard().setNewObjective(new SidebarObjective());
             new BuildPlayer(p);
         }
 

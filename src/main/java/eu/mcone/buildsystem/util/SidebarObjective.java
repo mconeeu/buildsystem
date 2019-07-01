@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 - 2018 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * Copyright (c) 2017 - 2019 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
  * You are not allowed to decompile the code
  */
 
@@ -8,9 +8,9 @@ package eu.mcone.buildsystem.util;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.scoreboard.CoreSidebarObjective;
 
-public class Objective extends CoreSidebarObjective {
+public class SidebarObjective extends CoreSidebarObjective {
 
-    public Objective() {
+    public SidebarObjective() {
         super("Plot-BuildServer");
     }
 

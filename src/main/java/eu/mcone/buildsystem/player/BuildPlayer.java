@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017 - 2019 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem.player;
 
 import eu.mcone.buildsystem.BuildSystem;

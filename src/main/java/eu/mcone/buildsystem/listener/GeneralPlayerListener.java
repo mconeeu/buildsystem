@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2017 - 2019 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
 package eu.mcone.buildsystem.listener;
 
 import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.buildsystem.player.BuildPlayer;
-import eu.mcone.buildsystem.util.Objective;
+import eu.mcone.buildsystem.util.SidebarObjective;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.util.CoreActionBar;
@@ -24,12 +29,11 @@ public class GeneralPlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         CorePlayer cp = CoreSystem.getInstance().getCorePlayer(p);
+        cp.getScoreboard().setNewObjective(new SidebarObjective());
 
         LOADING_MSG.send(p);
         Bukkit.getScheduler().runTask(BuildSystem.getInstance(), () -> {
             new BuildPlayer(cp);
-
-            cp.getScoreboard().setNewObjective(new Objective());
             LOADING_SUCCESS_MSG.send(p);
         });
     }
