@@ -20,6 +20,8 @@ public class SecretSignsListener implements Listener {
             e.setLine(1, "§7»§7§l " + name + "§7 «");
             e.setLine(3, "§2§lEntdecken!");
         }
+
+        int i = 3;
     }
 
 }
