@@ -13,12 +13,20 @@ public class SecretSignsListener implements Listener {
 
     @EventHandler
     public void on(SignChangeEvent e) {
-        if ((e.getLine(0).equals("[secrets]")) && (e.getLine(1) != null)) {
+        if (e.getLine(0).equals("[secrets]") && e.getLine(1) != null) {
             String name = e.getLine(1);
 
             e.setLine(0, "§7»§c Secrets");
             e.setLine(1, "§7»§7§l " + name + "§7 «");
             e.setLine(3, "§2§lEntdecken!");
+        }
+
+        if (e.getLine(0).equals("[jump]") && e.getLine(1) != null) {
+            String name = e.getLine(1);
+
+            e.setLine(0, "§7»§c Jump'n'Run");
+            e.setLine(1, name);
+            e.setLine(3, "§e§lSpielen!");
         }
     }
 
