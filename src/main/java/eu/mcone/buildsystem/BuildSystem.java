@@ -11,7 +11,6 @@ import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
 import eu.mcone.buildsystem.player.BuildPlayer;
-import eu.mcone.buildsystem.util.SidebarObjective;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
@@ -72,11 +71,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         );
         buildSystem.setWorlds(ListMode.BLACKLIST, plotWorld.bukkit());
         buildSystem.setUseBuildPermissionNodes(true);
-
-        for (CorePlayer p : CoreSystem.getInstance().getOnlineCorePlayers()) {
-            p.getScoreboard().setNewObjective(new SidebarObjective());
-            new BuildPlayer(p);
-        }
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
     }
