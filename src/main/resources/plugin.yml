@@ -4,7 +4,6 @@ version: ${project.version}
 main: eu.mcone.buildsystem.BuildSystem
 depend: [MCONE-BukkitCoreSystem]
 softdepend: [WorldEdit]
-
 permissions:
   build:
     description: Build Main Permission

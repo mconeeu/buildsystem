@@ -6,6 +6,7 @@
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
+import eu.mcone.buildsystem.command.PlotFinishCMD;
 import eu.mcone.buildsystem.command.SkullCMD;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
@@ -57,7 +58,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
                 new WeatherChangeListener()
         );
         registerCommands(
-                new SkullCMD()
+                new SkullCMD(),
+                new PlotFinishCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);

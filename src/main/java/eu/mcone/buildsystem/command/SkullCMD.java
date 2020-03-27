@@ -6,6 +6,7 @@
 package eu.mcone.buildsystem.command;
 
 import eu.mcone.buildsystem.BuildSystem;
+import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.command.CorePlayerCommand;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,9 +28,9 @@ public class SkullCMD extends CorePlayerCommand {
 			skull.setItemMeta(sm);
 			p.getInventory().addItem(skull);
 
-			BuildSystem.getInstance().getMessager().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
+			CoreSystem.getInstance().getMessager().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
 		} else {
-			BuildSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/skull <Spieler>");
+			CoreSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/skull <Spieler>");
 		}
 		return true;
 	}
