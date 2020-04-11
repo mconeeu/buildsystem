@@ -47,7 +47,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         players = new ArrayList<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
-        CoreSystem.getInstance().getTranslationManager().loadCategories(this);
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
 
