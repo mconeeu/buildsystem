@@ -19,7 +19,7 @@ public class PlotFinishInventory extends CoreInventory {
                 .lore("§7§oBestätige das du dein Plot fertig", "§7§ogebaut hast §7§ound es", "§7§ofür deine Bewerbung bereit ist!")
                 .create(), e -> {
             player.closeInventory();
-            CoreSystem.getInstance().getMessager().send(player, "§aDu hast dein Plot erfolgreich abgeschickt, du kannst es aber noch weiterhin bearbeiten!");
+            CoreSystem.getInstance().getMessenger().send(player, "§aDu hast dein Plot erfolgreich abgeschickt, du kannst es aber noch weiterhin bearbeiten!");
         });
 
 

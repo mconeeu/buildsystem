@@ -5,8 +5,11 @@
 
 package eu.mcone.buildsystem.util;
 
+import eu.mcone.buildsystem.BuildSystem;
+import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.scoreboard.CoreSidebarObjective;
+import org.bukkit.entity.Player;
 
 public class SidebarObjective extends CoreSidebarObjective {
 
@@ -16,6 +19,7 @@ public class SidebarObjective extends CoreSidebarObjective {
 
     @Override
     public void onRegister(CorePlayer player) {
+
         setDisplayName("§7§l⚔ §e§l§nBuild Server");
 
         setScore(7, "");
@@ -23,14 +27,14 @@ public class SidebarObjective extends CoreSidebarObjective {
         setScore(5, "§7§ofür Hilfe");
         setScore(4, "");
         setScore(3, "§8» §7Welt:");
-        setScore(2, "§f§o"+player.getWorld().getName());
+        setScore(2, "§f§o" + player.getWorld().getName());
         setScore(1, "");
         setScore(0, "§f§lMCONE.EU");
     }
 
     @Override
     public void onReload(CorePlayer player) {
-        setScore(2, "§f§o"+player.getWorld().getName());
+        setScore(2, "§f§o" + player.getWorld().getName());
     }
 
 }

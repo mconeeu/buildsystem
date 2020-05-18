@@ -21,7 +21,7 @@ public class PlotFinishCMD extends CoreCommand {
         if (args.length == 0) {
             new PlotFinishInventory(player);
         } else {
-            CoreSystem.getInstance().getMessager().send(player,"§4Bitte benutze §c/finish");
+            CoreSystem.getInstance().getMessenger().send(player,"§4Bitte benutze §c/finish");
         }
 
 

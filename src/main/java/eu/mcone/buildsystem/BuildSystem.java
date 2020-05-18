@@ -8,6 +8,7 @@ package eu.mcone.buildsystem;
 import com.sk89q.wepif.PermissionsProvider;
 import eu.mcone.buildsystem.command.PlotFinishCMD;
 import eu.mcone.buildsystem.command.SkullCMD;
+import eu.mcone.buildsystem.command.WorldToolsCMD;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
@@ -22,8 +23,10 @@ import eu.mcone.coresystem.api.bukkit.spawnable.ListMode;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
 
 import java.util.*;
 
@@ -36,6 +39,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     private eu.mcone.coresystem.api.bukkit.world.BuildSystem buildSystem;
     @Getter
     private CoreWorld plotWorld;
+    @Getter
     private List<BuildPlayer> players;
 
     public BuildSystem() {
@@ -47,7 +51,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         players = new ArrayList<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
-        CoreSystem.getInstance().getTranslationManager().loadCategories(this);
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
 
@@ -59,20 +62,14 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         );
         registerCommands(
                 new SkullCMD(),
-                new PlotFinishCMD()
+                new PlotFinishCMD(),
+                new WorldToolsCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);
         CoreSystem.getInstance().enableTpaSystem(this, 0);
 
         sendConsoleMessage("§aBuildSystem wird geladen!");
-        buildSystem = CoreSystem.getInstance().initialiseBuildSystem(
-                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.BLOCK_BREAK,
-                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.BLOCK_PLACE,
-                eu.mcone.coresystem.api.bukkit.world.BuildSystem.BuildEvent.INTERACT
-        );
-        buildSystem.setWorlds(ListMode.BLACKLIST, plotWorld.bukkit());
-        buildSystem.setUseBuildPermissionNodes(true);
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
     }
@@ -157,6 +154,15 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         return null;
     }
 
+    public BuildPlayer getBuildPlayer(Player player) {
+        for (BuildPlayer bp : players) {
+            if (bp.getCorePlayer().bukkit().equals(player)) {
+                return bp;
+            }
+        }
+        return null;
+    }
+
     public Collection<BuildPlayer> getBuildPlayers() {
         return players;
     }
@@ -173,5 +179,4 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     public HomeManager getHomeManager(Player player) {
         return getBuildPlayer(player.getUniqueId());
     }
-
 }

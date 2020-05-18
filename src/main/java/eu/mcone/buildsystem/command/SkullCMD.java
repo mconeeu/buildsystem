@@ -28,9 +28,9 @@ public class SkullCMD extends CorePlayerCommand {
 			skull.setItemMeta(sm);
 			p.getInventory().addItem(skull);
 
-			CoreSystem.getInstance().getMessager().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
+			CoreSystem.getInstance().getMessenger().send(p, "§2Du hast den Kopf von §a" + args[0] + " §2erhalten");
 		} else {
-			CoreSystem.getInstance().getMessager().send(p, "§4Bitte benutze: §c/skull <Spieler>");
+			CoreSystem.getInstance().getMessenger().send(p, "§4Bitte benutze: §c/skull <Spieler>");
 		}
 		return true;
 	}
