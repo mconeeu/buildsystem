@@ -8,21 +8,11 @@ package eu.mcone.buildsystem.player;
 import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
-import eu.mcone.coresystem.api.bukkit.player.plugin.GamePlayer;
 import eu.mcone.coresystem.api.bukkit.player.plugin.GamePlayerData;
-import eu.mcone.coresystem.api.bukkit.player.profile.GameProfile;
-import eu.mcone.coresystem.api.bukkit.player.profile.PlayerDataProfile;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class BuildPlayer extends GamePlayerData<BuildPlayerProfile> {
 
@@ -57,13 +47,21 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerProfile> {
             if (getWorldPermission(world).equals(WorldRole.GUEST)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.BUILDER);
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Builder Rechte auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fBuilder§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Builder Rang auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fBuilder§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Builder Rang auf der Welt: §3" + world.getName());
+                }
             } else if (getWorldPermission(world).equals(WorldRole.BUILDER)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.OWNER);
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Admin Rechte auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn aufder  §fWelt §azum §fAdmin§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Admin Rang auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fAdmin§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Admin Rang auf der Welt: §3" + world.getName());
+                }
             } else {
                 CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits Administrator!");
             }
@@ -71,16 +69,24 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerProfile> {
             if (getWorldPermission(world).equals(WorldRole.GUEST)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.BUILDER);
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Builder Rechte auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fBuilder§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Builder Rang auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fBuilder§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Builder Rang auf der Welt: §3" + world.getName());
+                }
             } else if (getWorldPermission(world).equals(WorldRole.BUILDER)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.OWNER);
                 corePlayer.bukkit().getInventory().clear();
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Admin Rechte auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fAdmin§a gemacht, das kannst du nicht mehr ändern!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Admin Rang auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fAdmin§a Rang gesetzt, das kannst du nicht mehr ändern!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Admin Rang auf der Welt: §3" + world.getName());
+                }
             } else {
-                CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits Admin auf der Welt!");
+                CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits §cAdmin §4auf der §cWelt§4!");
             }
         }
 
@@ -92,32 +98,54 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerProfile> {
             if (getWorldPermission(world).equals(WorldRole.OWNER)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.BUILDER);
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Builder Rechte auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fBuilder§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Builder Rechte auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fBuilder§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun Builder Rechte auf der Welt: §3" + world.getName());
+                }
             } else if (getWorldPermission(world).equals(WorldRole.BUILDER)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.GUEST);
                 corePlayer.bukkit().getInventory().clear();
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun keine Rechte mehr auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fSpieler§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun keine Rechte mehr auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fSpieler§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Spieler Rang auf der Welt: §3" + world.getName());
+                }
             } else {
                 CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits keinen Rang auf der Welt!");
             }
         } else {
             if (getWorldPermission(world).equals(WorldRole.OWNER)) {
-                CoreSystem.getInstance().getMessenger().send(promoter, "§4Du hast zu wenig Rechte um ihn den Admin Rang zu entfernen!");
+                CoreSystem.getInstance().getMessenger().send(promoter, "§4Du hast zu wenig Rechte um den Spieler auf der Welt den Admin Rang zu entfernen!");
             } else if (getWorldPermission(world).equals(WorldRole.BUILDER)) {
                 allowedWorlds.remove(world);
                 allowedWorlds.put(world, WorldRole.GUEST);
                 corePlayer.bukkit().getInventory().clear();
-                CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun keine Rechte mehr auf der Welt: §3" + world.getName());
-                CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast ihn auf der §fWelt §azum §fSpieler§a gemacht!");
+                if (promoter != corePlayer.bukkit()) {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun keine Rechte mehr auf der Welt: §3" + world.getName());
+                    CoreSystem.getInstance().getMessenger().send(promoter, "§aDu hast den Spieler auf der §fWelt §aden §fSpieler§a Rang gesetzt!");
+                } else {
+                    CoreSystem.getInstance().getMessenger().send(corePlayer.bukkit(), "§aDu hast nun den Spieler Rang auf der Welt: §3" + world.getName());
+                }
             } else {
-                CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits keinen Rang auf der Welt!");
+                CoreSystem.getInstance().getMessenger().send(promoter, "§4Der Spieler hat bereits §ckeinen Rang §4auf der §cWelt§4!");
             }
         }
 
         saveData();
+    }
+
+    public String hasWorldPermissions(World world) {
+        if (getWorldPermission(world).equals(WorldRole.OWNER)) {
+            return "§cAdmin: " + corePlayer.getName();
+        } else if (getWorldPermission(world).equals(WorldRole.BUILDER)) {
+            return "§eBuilder: " + corePlayer.getName();
+        } else {
+            return "§7Spieler: " + corePlayer.getName();
+        }
     }
 
     public void setWorldPermission(World world, WorldRole role) {
@@ -134,16 +162,6 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerProfile> {
         saveData();
     }
 
-    public boolean hasWorldPermissions() {
-        for (World worlds : Bukkit.getWorlds()) {
-            if (getWorldPermission(worlds).equals(WorldRole.BUILDER) || getWorldPermission(worlds).equals(WorldRole.OWNER)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
 
     public WorldRole getWorldPermission(World world) {
         return allowedWorlds.getOrDefault(world, WorldRole.GUEST);

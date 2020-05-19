@@ -8,10 +8,7 @@ import eu.mcone.coresystem.api.bukkit.inventory.CoreInventory;
 import eu.mcone.coresystem.api.bukkit.inventory.InventoryOption;
 import eu.mcone.coresystem.api.bukkit.inventory.InventorySlot;
 import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 public class WorldToolsAllWorldsInventory extends CoreInventory {
@@ -19,13 +16,14 @@ public class WorldToolsAllWorldsInventory extends CoreInventory {
     private int i = 0;
 
     public WorldToolsAllWorldsInventory(Player player) {
-        super("§fWorldTools", player, InventorySlot.ROW_5, InventoryOption.FILL_EMPTY_SLOTS);
+        super("§fWorldTools - §oDeine Welten", player, InventorySlot.ROW_5, InventoryOption.FILL_EMPTY_SLOTS);
         BuildPlayer buildPlayer = BuildSystem.getInstance().getBuildPlayer(player);
 
         for (World world : Bukkit.getWorlds()) {
             if (buildPlayer.getWorldPermission(world).equals(WorldRole.BUILDER) || buildPlayer.getWorldPermission(world).equals(WorldRole.OWNER)) {
-                setItem(i, new ItemBuilder(Material.GRASS, 1, 0).displayName("§f" + world.getName()).create(), e -> {
+                setItem(i, new ItemBuilder(Material.GRASS, 1, 0).displayName("§f" + world.getName()).lore(buildPlayer.hasWorldPermissions(world), "", "§8» §f§nLinksklick§8 | §7§oTelepotieren").create(), e -> {
                             player.closeInventory();
+                            player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT,1,1);
                             player.teleport(CoreSystem.getInstance().getWorldManager().getWorld(world.getName()).getLocation("spawn"));
                         }
                 );

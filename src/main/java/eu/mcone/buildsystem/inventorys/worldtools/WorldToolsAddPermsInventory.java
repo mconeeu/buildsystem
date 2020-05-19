@@ -30,7 +30,7 @@ public class WorldToolsAddPermsInventory extends CoreInventory {
         Player player = event.getPlayer();
         Player target = Bukkit.getPlayer(name);
 
-        if (target != null && !target.equals(event.getPlayer())) {
+        if (target != null) {
 
             if (event.getSlot().equals(AnvilSlot.OUTPUT)) {
                 player.closeInventory();
@@ -48,16 +48,31 @@ public class WorldToolsAddPermsInventory extends CoreInventory {
     }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).displayName("?").create());
 
     public WorldToolsAddPermsInventory(Player player) {
-        super("§fWorldTools", player, InventorySlot.ROW_5, InventoryOption.FILL_EMPTY_SLOTS);
+        super("§fWorldTools - §oRechte", player, InventorySlot.ROW_5, InventoryOption.FILL_EMPTY_SLOTS);
 
         for (World world : Bukkit.getWorlds()) {
-            setItem(i, new ItemBuilder(Material.GRASS, 1, 0).displayName("§f" + world.getName()).create(), e -> {
-                        player.closeInventory();
-                        ANVIL_INVENTORY.open(player);
-                        World.put(player, world);
-                    }
-            );
-            i++;
+            if (player.hasPermission("worldtools.promote")) {
+                setItem(i, new ItemBuilder(Material.GRASS, 1, 0).displayName("§f" + world.getName()).create(), e -> {
+                            player.closeInventory();
+                            ANVIL_INVENTORY.open(player);
+                            World.remove(player);
+                            World.put(player, world);
+                        }
+                );
+                i++;
+            } else {
+                BuildPlayer buildPlayer = BuildSystem.getInstance().getBuildPlayer(player);
+                if (buildPlayer.getWorldPermission(world).equals(WorldRole.OWNER)) {
+                    setItem(i, new ItemBuilder(Material.GRASS, 1, 0).displayName("§f" + world.getName()).create(), e -> {
+                                player.closeInventory();
+                                ANVIL_INVENTORY.open(player);
+                                World.remove(player);
+                                World.put(player, world);
+                            }
+                    );
+                    i++;
+                }
+            }
         }
 
 

@@ -5,30 +5,25 @@ import eu.mcone.coresystem.api.bukkit.inventory.InventoryOption;
 import eu.mcone.coresystem.api.bukkit.inventory.InventorySlot;
 import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 public class WorldToolsChoosePermsInventory extends CoreInventory {
 
     public WorldToolsChoosePermsInventory(Player player) {
-        super("§fWorldTools", player, InventorySlot.ROW_3, InventoryOption.FILL_EMPTY_SLOTS);
+        super("§fWorldTools - §oAuswahl", player, InventorySlot.ROW_3, InventoryOption.FILL_EMPTY_SLOTS);
 
 
-        setItem(InventorySlot.ROW_2_SLOT_3, new ItemBuilder(Material.INK_SACK, 1, 0)
+        setItem(InventorySlot.ROW_2_SLOT_3, new ItemBuilder(Material.INK_SACK, 1, 10)
                 .displayName("§fRechte hinzufügen").create(), e -> {
-            if (player.hasPermission("worldtools.promote")) {
-                new WorldToolsAddPermsInventory(player);
-            } else {
-                new WorldToolsAddUserPermsInventory(player);
-            }
+            new WorldToolsAddPermsInventory(player);
+            player.playSound(player.getLocation(), Sound.CLICK,1,1);
         });
 
-        setItem(InventorySlot.ROW_2_SLOT_7, new ItemBuilder(Material.INK_SACK, 1, 0)
+        setItem(InventorySlot.ROW_2_SLOT_7, new ItemBuilder(Material.INK_SACK, 1, 1)
                 .displayName("§fRechte entfernen").create(), e -> {
-            if (player.hasPermission("worldtools.demote")) {
-                new WorldToolsRemovePermsInventory(player);
-            } else {
-                new WorldToolsRemoveUserPermsInventory(player);
-            }
+            new WorldToolsRemovePermsInventory(player);
+            player.playSound(player.getLocation(), Sound.CLICK,1,1);
         });
 
         openInventory();
