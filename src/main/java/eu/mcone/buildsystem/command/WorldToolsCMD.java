@@ -31,7 +31,7 @@ public class WorldToolsCMD extends CorePlayerCommand {
                 String world = args[2];
                 if (!world.equalsIgnoreCase("plots")) {
                     if (t != null) {
-                        if (!t.hasPermission("coresystem.worldtools.bypass")) {
+                        if (!t.hasPermission("buildsystem.builder")) {
                             if (Bukkit.getWorld(world) != null) {
                                 if (args[0].equalsIgnoreCase("add")) {
                                     if (!bt.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || !bt.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {

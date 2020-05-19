@@ -25,9 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public class GeneralPlayerListener implements Listener {
@@ -45,7 +43,39 @@ public class GeneralPlayerListener implements Listener {
         Player p = e.getPlayer();
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
         if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
-            if (!p.hasPermission("coresystem.worldtools.bypass")) {
+            if (!p.hasPermission("buildsystem.builder")) {
+                if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
+                    e.setCancelled(false);
+                } else {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        Player p = e.getPlayer();
+        BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
+        if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
+            if (!p.hasPermission("buildsystem.builder")) {
+                if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
+                    e.setCancelled(false);
+                } else {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onPick(PlayerPickupItemEvent e) {
+        Player p = e.getPlayer();
+        BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
+        if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
+            if (!p.hasPermission("buildsystem.builder")) {
                 if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
                     e.setCancelled(false);
                 } else {
@@ -61,7 +91,7 @@ public class GeneralPlayerListener implements Listener {
         String cmd = e.getMessage();
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
         if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
-            if (!p.hasPermission("coresystem.worldtools.bypass")) {
+            if (!p.hasPermission("buildsystem.builder")) {
                 if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
                     e.setCancelled(false);
                 } else if (cmd.startsWith("//")) {
@@ -77,7 +107,7 @@ public class GeneralPlayerListener implements Listener {
         Player p = e.getPlayer();
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
         if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
-            if (!p.hasPermission("coresystem.worldtools.bypass")) {
+            if (!p.hasPermission("buildsystem.builder")) {
                 if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
                     e.setCancelled(false);
                 } else {
@@ -94,7 +124,7 @@ public class GeneralPlayerListener implements Listener {
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(p);
         if (e.getClickedInventory() != null) {
             if (!p.getWorld().getName().equalsIgnoreCase("plots")) {
-                if (!p.hasPermission("coresystem.worldtools.bypass")) {
+                if (!p.hasPermission("buildsystem.builder")) {
                     if (!e.getClickedInventory().getName().startsWith("§fWorldTools")) {
                         if (bp.getWorldPermission(p.getWorld()).equals(WorldRole.BUILDER) || bp.getWorldPermission(p.getWorld()).equals(WorldRole.OWNER)) {
                             e.setCancelled(false);
@@ -125,7 +155,7 @@ public class GeneralPlayerListener implements Listener {
     public void onChangedWorld(PlayerChangedWorldEvent e) {
         CoreSystem.getInstance().getCorePlayer(e.getPlayer()).getScoreboard().getObjective(DisplaySlot.SIDEBAR).reload();
         Player p = e.getPlayer();
-        if (!p.hasPermission("coresystem.worldtools.bypass")) {
+        if (!p.hasPermission("buildsystem.builder")) {
             p.getInventory().clear();
         }
     }
