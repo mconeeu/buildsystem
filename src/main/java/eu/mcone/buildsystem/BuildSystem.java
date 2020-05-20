@@ -48,13 +48,15 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         instance = this;
         players = new ArrayList<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
-        worldManager = new WorldToolsManager(this);
         CoreSystem.getInstance().getTranslationManager().loadAdditionalCategories("build");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
 
-        sendConsoleMessage("§aListener und Events werden geöaden!");
+        sendConsoleMessage("§aStarting WorldToolsManager!");
+        worldManager = new WorldToolsManager(this);
+
+        sendConsoleMessage("§aLoading Commands, Events, TpSystems!");
         registerEvents(
                 new GeneralPlayerListener(),
                 new SecretSignsListener(),
@@ -69,9 +71,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);
         CoreSystem.getInstance().enableTpaSystem(this, 0);
 
-        sendConsoleMessage("§aBuildSystem wird geladen!");
-
-        sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a wurde aktiviert...");
+        sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a enabled...");
     }
 
     public void onDisable() {
@@ -80,7 +80,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
             unregisterBuildPlayer(player);
         }
 
-        sendConsoleMessage("§cPlugin wurde deaktiviert!");
+        sendConsoleMessage("§cPlugin disabled!");
     }
 
     @Override

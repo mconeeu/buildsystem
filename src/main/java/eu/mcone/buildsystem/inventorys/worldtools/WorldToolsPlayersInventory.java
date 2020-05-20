@@ -68,9 +68,11 @@ public class WorldToolsPlayersInventory extends CoreInventory {
             WorldToolsPlayersInventory.toSetWorlds.remove(p);
             new WorldToolsChooseRoleInventory(p, w, uuid, name);
         } catch (PlayerNotResolvedException e) {
-            e.printStackTrace();
+            BuildSystem.getInstance().getMessenger().send(p, "§4Der Spieler mit dem Namen§c "+targetName+"§4 konnte nicht gefunden werden: §7§o"+e.getMessage());
+        } finally {
+            WorldToolsPlayersInventory.toSetWorlds.remove(p);
         }
-    }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).displayName("Name eingeben...").create());
+    }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).create());
 
     private static final Map<Player, World> toSetWorlds = new HashMap<>();
 

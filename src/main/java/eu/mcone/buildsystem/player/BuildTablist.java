@@ -26,7 +26,6 @@ public class BuildTablist extends CoreScoreboard {
             suffix = suffix + " §3["+(player.getWorld().getName().substring(0, Math.min(16 - (suffix.length() + 5), player.getWorld().getName().length())))+"]";
         }
 
-        System.out.println("prefix: "+prefix+", suffix: "+suffix+", priority: "+priority);
         team.prefix(prefix).suffix(suffix).priority(priority);
     }
 
