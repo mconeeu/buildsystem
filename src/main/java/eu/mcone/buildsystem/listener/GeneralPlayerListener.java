@@ -15,8 +15,11 @@ import eu.mcone.coresystem.api.bukkit.event.PlayerVanishEvent;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.Objects;
 
 public class GeneralPlayerListener implements Listener {
 
@@ -27,6 +30,11 @@ public class GeneralPlayerListener implements Listener {
 
         p.setScoreboard(new BuildTablist());
         p.getScoreboard().setNewObjective(new SidebarObjective());
+    }
+
+    @EventHandler
+    public void onExplode(EntityExplodeEvent e) {
+        e.blockList().clear();
     }
 
     @EventHandler
