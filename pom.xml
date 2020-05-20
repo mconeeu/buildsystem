@@ -41,18 +41,16 @@
             <url>http://repo.mcone.eu/nexus/content/repositories/system/</url>
         </repository>
         <repository>
-            <id>sk89q-snapshots</id>
-            <url>http://maven.sk89q.com/artifactory/repo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>worldedit-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>athion-repo</id>
             <url>http://ci.athion.net/job/PlotSquared/ws/mvn/</url>
+        </repository>-->
+        <repository>
+            <id>fawe-repo</id>
+            <url>http://ci.athion.net/job/FastAsyncWorldEdit/ws/mvn/</url>
         </repository>
     </repositories>
 
@@ -70,9 +68,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.boydti</groupId>
+            <artifactId>fawe-api</artifactId>
+            <version>latest</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-core</artifactId>
+            <version>6.1.4-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.5</version>
+            <version>6.1.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

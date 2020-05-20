@@ -3,7 +3,7 @@ author: Rufus Maiwald
 version: ${project.version}
 main: eu.mcone.buildsystem.BuildSystem
 depend: [MCONE-BukkitCoreSystem]
-softdepend: [WorldEdit]
+softdepend: [WorldEdit,FastAsyncWorldEdit]
 permissions:
   build:
     description: Build Main Permission

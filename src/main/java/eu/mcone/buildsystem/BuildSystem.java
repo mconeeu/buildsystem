@@ -12,6 +12,7 @@ import eu.mcone.buildsystem.command.WorldToolsCMD;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
+import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
@@ -19,14 +20,11 @@ import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManager;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManagerGetter;
-import eu.mcone.coresystem.api.bukkit.spawnable.ListMode;
 import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.player.Group;
 import lombok.Getter;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
 
 import java.util.*;
 
@@ -36,9 +34,9 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     private static BuildSystem instance;
 
     @Getter
-    private eu.mcone.coresystem.api.bukkit.world.BuildSystem buildSystem;
-    @Getter
     private CoreWorld plotWorld;
+    @Getter
+    private WorldToolsManager worldManager;
     @Getter
     private List<BuildPlayer> players;
 
@@ -50,6 +48,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         instance = this;
         players = new ArrayList<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
+        worldManager = new WorldToolsManager(this);
+        CoreSystem.getInstance().getTranslationManager().loadAdditionalCategories("build");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
 
         sendConsoleMessage("§aProviding WEPIF Permissions!");
@@ -75,6 +75,11 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     }
 
     public void onDisable() {
+        for (BuildPlayer player : players) {
+            player.saveData();
+            unregisterBuildPlayer(player);
+        }
+
         sendConsoleMessage("§cPlugin wurde deaktiviert!");
     }
 

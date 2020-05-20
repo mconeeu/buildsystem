@@ -6,8 +6,6 @@ import eu.mcone.coresystem.api.bukkit.command.CoreCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.swing.*;
-
 public class PlotFinishCMD extends CoreCommand {
 
     public PlotFinishCMD() {
@@ -23,8 +21,6 @@ public class PlotFinishCMD extends CoreCommand {
         } else {
             CoreSystem.getInstance().getMessenger().send(player,"§4Bitte benutze §c/finish");
         }
-
-
 
         return false;
     }
