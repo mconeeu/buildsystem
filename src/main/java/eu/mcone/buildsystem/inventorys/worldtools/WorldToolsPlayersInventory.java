@@ -64,15 +64,15 @@ public class WorldToolsPlayersInventory extends CoreInventory {
 
             BuildSystem.getInstance().getWorldManager().setWorldRole(uuid, name, w, WorldRole.GUEST);
             p.playSound(p.getLocation(), Sound.NOTE_STICKS, 1, 1);
-            BuildSystem.getInstance().getMessenger().send(p, "§2Der Spieler§a "+name+"§2 hat nun die§7 Gast§2 Rolle auf der Welt "+w.getName());
+            BuildSystem.getInstance().getMessenger().send(p, "§2Der Spieler§a " + name + "§2 hat nun die§7 Gast§2 Rolle auf der Welt " + w.getName());
             WorldToolsPlayersInventory.toSetWorlds.remove(p);
             new WorldToolsChooseRoleInventory(p, w, uuid, name);
         } catch (PlayerNotResolvedException e) {
-            BuildSystem.getInstance().getMessenger().send(p, "§4Der Spieler mit dem Namen§c "+targetName+"§4 konnte nicht gefunden werden: §7§o"+e.getMessage());
+            BuildSystem.getInstance().getMessenger().send(p, "§4Der Spieler mit dem Namen§c " + targetName + "§4 konnte nicht gefunden werden: §7§o" + e.getMessage());
         } finally {
             WorldToolsPlayersInventory.toSetWorlds.remove(p);
         }
-    }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).create());
+    }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).displayName("?").create());
 
     private static final Map<Player, World> toSetWorlds = new HashMap<>();
 
