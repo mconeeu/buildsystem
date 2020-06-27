@@ -17,6 +17,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Objects;
@@ -54,6 +56,26 @@ public class GeneralPlayerListener implements Listener {
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(e.getPlayer().getUniqueId());
         bp.saveData();
         BuildSystem.getInstance().unregisterBuildPlayer(bp);
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(e.getPlayer().getUniqueId());
+        if (bp.canBuildOn(bp.bukkit().getWorld())) {
+            e.setCancelled(false);
+            return;
+        }
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onItemPickup(PlayerPickupItemEvent e) {
+        BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(e.getPlayer().getUniqueId());
+        if (bp.canBuildOn(bp.bukkit().getWorld())) {
+            e.setCancelled(false);
+            return;
+        }
+        e.setCancelled(true);
     }
 
 }
