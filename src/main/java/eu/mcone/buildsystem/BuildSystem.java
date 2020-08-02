@@ -6,9 +6,8 @@
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
-import eu.mcone.buildsystem.command.PlotFinishCMD;
-import eu.mcone.buildsystem.command.SkullCMD;
-import eu.mcone.buildsystem.command.WorldToolsCMD;
+import com.sk89q.worldedit.function.factory.Apply;
+import eu.mcone.buildsystem.command.*;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
@@ -32,7 +31,6 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
 
     @Getter
     private static BuildSystem instance;
-
     @Getter
     private CoreWorld plotWorld;
     @Getter
@@ -63,6 +61,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
                 new WeatherChangeListener()
         );
         registerCommands(
+                new AcceptCMD(),
+                new ApplyCMD(),
                 new SkullCMD(),
                 new PlotFinishCMD(),
                 new WorldToolsCMD()

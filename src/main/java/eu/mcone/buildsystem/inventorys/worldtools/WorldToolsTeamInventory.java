@@ -1,7 +1,6 @@
 package eu.mcone.buildsystem.inventorys.worldtools;
 
 import eu.mcone.buildsystem.BuildSystem;
-import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.buildsystem.worldtools.WorldRole;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.inventory.CoreInventory;
@@ -10,17 +9,15 @@ import eu.mcone.coresystem.api.bukkit.inventory.InventorySlot;
 import eu.mcone.coresystem.api.bukkit.inventory.anvil.AnvilSlot;
 import eu.mcone.coresystem.api.bukkit.inventory.anvil.CoreAnvilInventory;
 import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
-import eu.mcone.coresystem.api.bukkit.player.OfflineCorePlayer;
 import eu.mcone.coresystem.api.bukkit.util.Messenger;
 import eu.mcone.coresystem.api.bukkit.world.WorldCreateProperties;
-import eu.mcone.coresystem.api.core.exception.PlayerNotResolvedException;
-import org.bukkit.*;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class WorldToolsTeamInventory extends CoreInventory {
-
 
     private static final CoreAnvilInventory ANVIL_INVENTORY = CoreSystem.getInstance().createAnvilInventory(event -> {
         String worldName = event.getName();

@@ -6,18 +6,37 @@
 package eu.mcone.buildsystem.player;
 
 import eu.mcone.buildsystem.BuildSystem;
+import eu.mcone.buildsystem.enums.BuildTheme;
 import eu.mcone.buildsystem.worldtools.WorldRole;
 import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.plugin.GamePlayerData;
 import eu.mcone.coresystem.api.bukkit.player.profile.PlayerDataProfile;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.World;
 
-public class BuildPlayer extends GamePlayerData<PlayerDataProfile> {
+import java.util.HashMap;
+
+public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
 
     static {
         PlayerDataProfile.preventTeleport(true);
     }
+
+    @Getter
+    /* first boolean plot accepted, second boolean world accepted */
+    private HashMap<Boolean, Boolean> accepted;
+    @Getter
+    /* world theme */
+    private Boolean deny;
+    @Getter
+    /* world theme */
+    private String thema;
+    @Getter
+    @Setter
+    /* player builder apply world */
+    private World buildWorld;
 
     public BuildPlayer(CorePlayer player) {
         super(player);
@@ -25,13 +44,36 @@ public class BuildPlayer extends GamePlayerData<PlayerDataProfile> {
     }
 
     @Override
-    protected PlayerDataProfile loadData() {
-        return BuildSystem.getInstance().loadGameProfile(corePlayer.bukkit(), PlayerDataProfile.class);
+    public BuildPlayerDataProfile reload() {
+        BuildPlayerDataProfile profile = super.reload();
+        accepted = profile.getAccepted();
+
+        return profile;
+    }
+
+    @Override
+    protected BuildPlayerDataProfile loadData() {
+        return BuildSystem.getInstance().loadGameProfile(corePlayer.bukkit(), BuildPlayerDataProfile.class);
     }
 
     @Override
     public void saveData() {
-        BuildSystem.getInstance().saveGameProfile(new PlayerDataProfile(corePlayer.bukkit(), homes));
+        BuildSystem.getInstance().saveGameProfile(new BuildPlayerDataProfile(corePlayer.bukkit(), BuildSystem.getInstance().getHomeManager(corePlayer.bukkit()).getHomes(), accepted, thema, buildWorld, deny));
+    }
+
+    public void setPlotAccepted(HashMap<Boolean, Boolean> accept) {
+        accepted = accept;
+        saveData();
+    }
+
+    public void setThema(BuildTheme buildTheme) {
+        thema = buildTheme.getName();
+        saveData();
+    }
+
+    public void setDeny(boolean bo) {
+        deny = bo;
+        saveData();
     }
 
     public WorldRole getWorldRole(World world) {
@@ -59,8 +101,8 @@ public class BuildPlayer extends GamePlayerData<PlayerDataProfile> {
         return corePlayer.hasPermission(WorldToolsManager.BUILD_PERMISSION)
                 ? "§cTeam-Builder"
                 : (role != null
-                    ? role.getLabel()
-                    : "§7§oBesucher");
+                ? role.getLabel()
+                : "§7§oBesucher");
     }
 
 }
