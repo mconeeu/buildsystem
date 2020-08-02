@@ -15,15 +15,13 @@ import java.util.HashMap;
 
 public class AcceptCMD extends CorePlayerCommand {
 
-
     public AcceptCMD() {
-        super("/accept");
+        super("accept", "buildsystem.accept.apply");
     }
 
     @Override
     public boolean onPlayerCommand(Player player, String[] args) {
 
-        if (player.hasPermission("buildsystem.accept.apply")) {
             if (args.length == 2) {
                 Player target = Bukkit.getPlayer(args[0]);
 
@@ -35,6 +33,9 @@ public class AcceptCMD extends CorePlayerCommand {
                             if (buildPlayer.getAccepted().containsKey(false)) {
                                 buildPlayer.getAccepted().put(true, false);
                                 BuildSystem.getInstance().getMessenger().send(player, "§2Du hast die Bewerbung von §c" + target.getName() + " §2angenommen und er wurde zum 2 Schritt geleitet!");
+
+                                CoreSystem.getInstance().getMessenger().send(target, "§2Dein §aPlot§2 wurde erfolgreich §aangenommen§2!");
+                                CoreSystem.getInstance().getMessenger().send(target, "§2Mit /apply erhälts du weite Informationen");
 
                                 World world = CoreSystem.getInstance().getWorldManager().createWorld(target.getName(), WorldCreateProperties.builder()
                                         .worldType(WorldType.FLAT)
@@ -54,10 +55,15 @@ public class AcceptCMD extends CorePlayerCommand {
                             } else if (buildPlayer.getAccepted().containsKey(true) && buildPlayer.getAccepted().containsValue(false)) {
                                 BuildSystem.getInstance().getMessenger().send(player, "§2Du hast die Bewerbung von §c" + target.getName() + " §2angenommen!");
                                 buildPlayer.getAccepted().put(false, true);
+
+                                CoreSystem.getInstance().getMessenger().send(target, "§2Deine §aWelt§2 wurde erfolgreich §aangenommen§2!");
+                                CoreSystem.getInstance().getMessenger().send(target, "§2Du erhätlts in kürze eine Email mit weiteren Informationen!");
+
                             }
                         } else if (args[1].equalsIgnoreCase("no")) {
                             buildPlayer.setDeny(true);
                             BuildSystem.getInstance().getMessenger().send(player, "§4Du hast die Bewerbung von §c" + target.getName() + " §4abgelehnt!");
+                            CoreSystem.getInstance().getMessenger().send(target, "§4Deine Builder Bewerbung wurde ablehnt!");
                         }
                     } else {
                         BuildSystem.getInstance().getMessenger().send(player, "§4Du darfst nicht dein eigene Builder Bewerbung annehmen!");
@@ -69,9 +75,6 @@ public class AcceptCMD extends CorePlayerCommand {
                 BuildSystem.getInstance().getMessenger().send(player, "§4Bitte benutze §c/accept <Spieler> [<yes|no>]");
             }
 
-        } else {
-            BuildSystem.getInstance().getMessenger().send(player, "§4Du hast für diesen Befehl keine Berechtigungen!");
-        }
         return false;
     }
 }

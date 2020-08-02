@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class ApplyCMD extends CorePlayerCommand {
 
     public ApplyCMD() {
-        super("apply");
+        super("apply", null, "ap");
     }
 
     @Override

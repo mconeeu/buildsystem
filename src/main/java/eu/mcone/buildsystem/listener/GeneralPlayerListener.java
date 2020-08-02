@@ -33,15 +33,17 @@ public class GeneralPlayerListener implements Listener {
         BuildPlayer buildPlayer = BuildSystem.getInstance().getBuildPlayer(p.bukkit());
 
 
-        if (buildPlayer.getAccepted().containsKey(true) && buildPlayer.getAccepted().containsValue(false)) {
-            CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§2Dein §aPlot§2 wurde erfolgreich §aangenommen§2!");
-            CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§2Mit /apply erhälts du weite Informationen");
-        } else if (buildPlayer.getDeny()) {
-            CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§4Deine Builder Bewerbung wurde ablehnt!");
-        }
+        if (buildPlayer.getAccepted() != null) {
+            if (buildPlayer.getAccepted().containsKey(true) && buildPlayer.getAccepted().containsValue(false)) {
+                CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§2Dein §aPlot§2 wurde erfolgreich §aangenommen§2!");
+                CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§2Mit /apply erhälts du weite Informationen");
+            } else if (buildPlayer.getDeny()) {
+                CoreSystem.getInstance().getMessenger().send(p.bukkit(), "§4Deine Builder Bewerbung wurde ablehnt!");
+            }
 
-        p.setScoreboard(new BuildTablist());
-        p.getScoreboard().setNewObjective(new SidebarObjective());
+            p.setScoreboard(new BuildTablist());
+            p.getScoreboard().setNewObjective(new SidebarObjective());
+        }
     }
 
     @EventHandler

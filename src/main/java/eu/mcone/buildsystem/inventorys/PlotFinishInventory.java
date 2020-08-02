@@ -23,15 +23,17 @@ public class PlotFinishInventory extends CoreInventory {
 
         setItem(InventorySlot.ROW_2_SLOT_5, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13)
                 .displayName("§aAbschicken")
-                .lore("§7§oBestätige das du dein Plot fertig", "§7§ogebaut hast §7§ound es", "§7§ofür deine Bewerbung bereit ist!")
+                .lore("§7§oBestätige das du dein Plot/Welt fertig", "§7§ogebaut hast §7§ound es", "§7§ofür deine Bewerbung bereit ist!")
                 .create(), e -> {
             player.closeInventory();
+
+
+            BuildSystem.getInstance().getMessenger().send(player, "§2Du hast §adein Plot/Welt§2 erfolgreich abgeschickt, du kannst es aber §anoch weiterhin bearbeiten§2!");
+            BuildSystem.getInstance().getMessenger().send(player, "§2Du wirst §ainformiert §2wenn du es in die nächte Stufe geschafft hast...");
 
             accpet.put(true, false);
 
             buildPlayer.setPlotAccepted(accpet);
-            BuildSystem.getInstance().getMessenger().send(player, "§2Du hast §adein Plot§2 erfolgreich abgeschickt, du kannst es aber §anoch weiterhin bearbeiten§2!");
-            BuildSystem.getInstance().getMessenger().send(player, "§2Du wirst §ainformiert §2wenn du es in die nächte Stufe geschafft hast...");
         });
 
 

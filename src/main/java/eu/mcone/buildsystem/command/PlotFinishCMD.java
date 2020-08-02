@@ -21,10 +21,14 @@ public class PlotFinishCMD extends CoreCommand {
         if (args.length == 0) {
             BuildPlayer buildPlayer = BuildSystem.getInstance().getBuildPlayer(player);
 
-            if (buildPlayer.getAccepted().containsKey(false) || buildPlayer.getAccepted().containsValue(true)) {
-                new PlotFinishInventory(player);
+            if (buildPlayer.getAccepted() != null) {
+                if (buildPlayer.getAccepted().containsKey(false) || buildPlayer.getAccepted().containsValue(true)) {
+                    new PlotFinishInventory(player);
+                } else {
+                    BuildSystem.getInstance().getMessenger().send(player, "§cDu hast bereits /finish eingeben!");
+                }
             } else {
-                BuildSystem.getInstance().getMessenger().send(player, "§cDu hast bereits /finish eingeben!");
+                new PlotFinishInventory(player);
             }
         } else {
             BuildSystem.getInstance().getMessenger().send(player, "§4Bitte benutze §c/finish");
