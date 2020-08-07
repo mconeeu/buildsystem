@@ -9,8 +9,12 @@ import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemFlag;
+
+import java.util.HashMap;
 
 public class WorldToolsInventory extends CoreInventory {
 
@@ -34,6 +38,12 @@ public class WorldToolsInventory extends CoreInventory {
                                         ? new String[]{"§7§oDu bist nur Besucher!"}
                                         : getLore(bp, world)
                                 )
+                                .enchantments(new HashMap<Enchantment, Integer>() {{
+                                    if (p.getWorld().equals(world)) {
+                                        put(Enchantment.DURABILITY, 1);
+                                    }
+                                }})
+                                .itemFlags(ItemFlag.HIDE_ENCHANTS)
                                 .create(),
                         !p.getWorld().equals(world) || bp.getWorldRole(world) != null ? e -> {
                             if (e.getClick().equals(ClickType.LEFT)) {

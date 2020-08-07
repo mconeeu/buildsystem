@@ -1,15 +1,15 @@
 package eu.mcone.buildsystem.player;
 
-import eu.mcone.coresystem.api.bukkit.player.profile.GameProfile;
+import com.intellectualcrafters.plot.object.Plot;
+import com.intellectualcrafters.plot.object.PlotPlayer;
+import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.coresystem.api.bukkit.player.profile.PlayerDataProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
@@ -17,21 +17,35 @@ import java.util.Map;
 @Setter
 public class BuildPlayerDataProfile extends PlayerDataProfile {
 
-    private HashMap<Boolean, Boolean> accepted;
-    private String thema;
-    private World buildWorld;
-    private Boolean deny;
+    private String finishedPlotId = null;
+    private transient Plot finishedPlot = null;
 
-    BuildPlayerDataProfile(Player p, Map<String, Location> homes, HashMap<Boolean, Boolean> accept, String thema, World buildWorld, Boolean deny) {
+    BuildPlayerDataProfile(Player p, Map<String, Location> homes, Plot finishedPlot) {
         super(p, homes);
 
-        this.accepted = accept;
-        this.thema = thema;
-        this.buildWorld = buildWorld;
-        this.deny = deny;
+        if (finishedPlot != null) {
+            this.finishedPlotId = finishedPlot.getId().toString();
+        }
     }
 
     @Override
-    public void doSetData(Player player) {}
+    public void doSetData(Player player) {
+        Plot plot = null;
+
+        if (finishedPlotId != null) {
+            for (Plot playerPlot : PlotPlayer.wrap(player).getPlots()) {
+                if (playerPlot.getId().toString().equals(finishedPlotId)) {
+                    plot = playerPlot;
+                }
+            }
+
+            if (plot == null) {
+                BuildSystem.getInstance().sendConsoleMessage("§cPlot with id "+finishedPlotId+" from player "+player.getName()+" is marked as finished but does not exist! Deleting finish mark.");
+                finishedPlotId = null;
+            }
+        }
+
+        this.finishedPlot = plot;
+    }
 
 }

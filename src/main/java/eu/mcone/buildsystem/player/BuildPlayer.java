@@ -5,18 +5,15 @@
 
 package eu.mcone.buildsystem.player;
 
+import com.intellectualcrafters.plot.object.Plot;
 import eu.mcone.buildsystem.BuildSystem;
-import eu.mcone.buildsystem.enums.BuildTheme;
 import eu.mcone.buildsystem.worldtools.WorldRole;
 import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.plugin.GamePlayerData;
 import eu.mcone.coresystem.api.bukkit.player.profile.PlayerDataProfile;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.World;
-
-import java.util.HashMap;
 
 public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
 
@@ -25,18 +22,7 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
     }
 
     @Getter
-    /* first boolean plot accepted, second boolean world accepted */
-    private HashMap<Boolean, Boolean> accepted;
-    @Getter
-    /* world theme */
-    private Boolean deny;
-    @Getter
-    /* world theme */
-    private String thema;
-    @Getter
-    @Setter
-    /* player builder apply world */
-    private World buildWorld;
+    private Plot finishedPlot;
 
     public BuildPlayer(CorePlayer player) {
         super(player);
@@ -46,7 +32,7 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
     @Override
     public BuildPlayerDataProfile reload() {
         BuildPlayerDataProfile profile = super.reload();
-        accepted = profile.getAccepted();
+        finishedPlot = profile.getFinishedPlot();
 
         return profile;
     }
@@ -58,22 +44,20 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
 
     @Override
     public void saveData() {
-        BuildSystem.getInstance().saveGameProfile(new BuildPlayerDataProfile(corePlayer.bukkit(), BuildSystem.getInstance().getHomeManager(corePlayer.bukkit()).getHomes(), accepted, thema, buildWorld, deny));
+        BuildSystem.getInstance().saveGameProfile(new BuildPlayerDataProfile(
+                corePlayer.bukkit(),
+                BuildSystem.getInstance().getHomeManager(corePlayer.bukkit()).getHomes(),
+                finishedPlot
+        ));
     }
 
-    public void setPlotAccepted(HashMap<Boolean, Boolean> accept) {
-        accepted = accept;
+    public void setFinishedPlot(Plot plot) {
+        this.finishedPlot = plot;
         saveData();
     }
 
-    public void setThema(BuildTheme buildTheme) {
-        thema = buildTheme.getName();
-        saveData();
-    }
-
-    public void setDeny(boolean bo) {
-        deny = bo;
-        saveData();
+    public boolean hasFinished() {
+        return finishedPlot != null;
     }
 
     public WorldRole getWorldRole(World world) {

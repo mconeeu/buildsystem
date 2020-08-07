@@ -1,10 +1,14 @@
-package eu.mcone.buildsystem.enums;
+/*
+ * Copyright (c) 2017 - 2019 Rufus Maiwald and the MC ONE Minecraftnetwork. All rights reserved
+ * You are not allowed to decompile the code
+ */
+
+package eu.mcone.buildsystem.player;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public enum BuildTheme {
+public enum BuildTopic {
 
     OLD("Altmodisch"),
     MODERN("Modern"),
@@ -14,11 +18,10 @@ public enum BuildTheme {
     JOONGLE("Jungle"),
     ASIA("Asien");
 
-
     private final String name;
 
-    BuildTheme(String name) {
+    BuildTopic(String name) {
         this.name = name;
     }
 
-    }
+}

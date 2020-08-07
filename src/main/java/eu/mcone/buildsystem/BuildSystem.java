@@ -6,13 +6,12 @@
 package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
-import com.sk89q.worldedit.function.factory.Apply;
 import eu.mcone.buildsystem.command.*;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
-import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.buildsystem.player.BuildPlayer;
+import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
@@ -61,10 +60,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
                 new WeatherChangeListener()
         );
         registerCommands(
-                new AcceptCMD(),
-                new ApplyCMD(),
                 new SkullCMD(),
-                new PlotFinishCMD(),
+                new FinishCMD(),
                 new WorldToolsCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
