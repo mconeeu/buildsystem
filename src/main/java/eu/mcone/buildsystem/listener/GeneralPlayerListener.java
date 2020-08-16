@@ -14,6 +14,7 @@ import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -47,6 +48,11 @@ public class GeneralPlayerListener implements Listener {
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(e.getPlayer().getUniqueId());
         bp.saveData();
         BuildSystem.getInstance().unregisterBuildPlayer(bp);
+    }
+
+    @EventHandler
+    public void onAward(PlayerAchievementAwardedEvent e) {
+        e.setCancelled(true);
     }
 
 }
