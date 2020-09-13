@@ -37,8 +37,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>mcone-systems</id>
-            <url>http://repo.mcone.eu/nexus/content/repositories/system/</url>
+            <id>onegaming-gitlab-systems</id>
+            <url>https://gitlab.onegaming.group/api/v4/groups/systems/-/packages/maven</url>
         </repository>
         <repository>
             <id>worldedit-repo</id>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>eu.mcone.coresystem</groupId>
             <artifactId>bukkit-api</artifactId>
-            <version>10.8.8-SNAPSHOT</version>
+            <version>10.8.10-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
