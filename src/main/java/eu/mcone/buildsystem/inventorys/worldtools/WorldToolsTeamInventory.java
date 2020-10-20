@@ -3,13 +3,13 @@ package eu.mcone.buildsystem.inventorys.worldtools;
 import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.buildsystem.worldtools.WorldRole;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
+import eu.mcone.coresystem.api.bukkit.broadcast.SimpleBroadcast;
 import eu.mcone.coresystem.api.bukkit.inventory.CoreInventory;
 import eu.mcone.coresystem.api.bukkit.inventory.InventoryOption;
 import eu.mcone.coresystem.api.bukkit.inventory.InventorySlot;
 import eu.mcone.coresystem.api.bukkit.inventory.anvil.AnvilSlot;
 import eu.mcone.coresystem.api.bukkit.inventory.anvil.CoreAnvilInventory;
 import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
-import eu.mcone.coresystem.api.bukkit.util.Messenger;
 import eu.mcone.coresystem.api.bukkit.world.WorldCreateProperties;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,7 +26,7 @@ public class WorldToolsTeamInventory extends CoreInventory {
 
         p.closeInventory();
         BuildSystem.getInstance().getMessenger().send(p, "§cDas kann ein paar Sekunden dauern..");
-        BuildSystem.getInstance().getMessenger().broadcast(Messenger.Broadcast.BroadcastMessageTyp.INFO_MESSAGE, "§4Der Spieler §c" + p.getName() + "§4 hat eine neue Welt erstellt!");
+        BuildSystem.getInstance().getMessenger().broadcast(new SimpleBroadcast("§4Der Spieler §c" + p.getName() + "§4 hat eine neue Welt erstellt!"));
 
         World world = CoreSystem.getInstance().getWorldManager().createWorld(worldName, WorldCreateProperties.builder()
                 .worldType(WorldType.FLAT)

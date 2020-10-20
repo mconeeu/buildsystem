@@ -42,6 +42,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     }
 
     public void onEnable() {
+        super.onEnable();
+
         instance = this;
         players = new ArrayList<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
