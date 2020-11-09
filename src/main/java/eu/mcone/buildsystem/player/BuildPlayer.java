@@ -79,6 +79,15 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
         }
     }
 
+    public boolean canSeeOn(World world) {
+        if (world.getName().equals("plots") || corePlayer.hasPermission(WorldToolsManager.BUILD_PERMISSION) || corePlayer.hasPermission(WorldToolsManager.TEAM_PERMISSIONS)) {
+            return true;
+        } else {
+            WorldRole role = getWorldRole(world);
+            return role != null && (role.equals(WorldRole.BUILDER) || role.equals(WorldRole.OWNER) || role.equals(WorldRole.GUEST));
+        }
+    }
+
     public String getWorldRoleLabel(World world) {
         WorldRole role = getWorldRole(world);
 

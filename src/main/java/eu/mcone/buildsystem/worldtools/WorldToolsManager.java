@@ -32,6 +32,7 @@ public class WorldToolsManager {
             fromRegistries(getDefaultCodecRegistry(), fromProviders(new UuidCodecProvider(UuidRepresentation.JAVA_LEGACY), PojoCodecProvider.builder().conventions(Conventions.DEFAULT_CONVENTIONS).automatic(true).build()))
     ).getCollection("build_worlds", WorldRoleEntry.class);
     public static final String BUILD_PERMISSION = "build.builder";
+    public static final String TEAM_PERMISSIONS = "build.staff";
     private final Map<World, Map<UUID, WorldRoleEntry.WorldPlayerEntry>> worldRoles;
 
     public WorldToolsManager(BuildSystem system) {

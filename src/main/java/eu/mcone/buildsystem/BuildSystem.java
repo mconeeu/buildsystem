@@ -7,6 +7,7 @@ package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
 import eu.mcone.buildsystem.command.*;
+import eu.mcone.buildsystem.listener.BlockPlaceEvent;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
 import eu.mcone.buildsystem.listener.WeatherChangeListener;
@@ -36,6 +37,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     private WorldToolsManager worldManager;
     @Getter
     private List<BuildPlayer> players;
+    @Getter
+    private HashMap<Player, String> specialItems;
 
     public BuildSystem() {
         super(Gamemode.BUILD, "build.prefix");
@@ -46,6 +49,7 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
 
         instance = this;
         players = new ArrayList<>();
+        specialItems = new HashMap<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
         CoreSystem.getInstance().getTranslationManager().loadAdditionalCategories("build");
         CoreSystem.getInstance().getWorldManager().enableUploadCommand(true);
@@ -59,13 +63,16 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         registerEvents(
                 new GeneralPlayerListener(),
                 new SecretSignsListener(),
-                new WeatherChangeListener()
+                new WeatherChangeListener(),
+                new BlockPlaceEvent()
         );
         registerCommands(
                 new SkullCMD(),
                 new FinishCMD(),
                 new WorldToolsCMD(),
-                new NightVisionCMD()
+                new NightVisionCMD(),
+                new SpecialItemsCMD(),
+                new SpecialCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);

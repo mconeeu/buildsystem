@@ -28,10 +28,11 @@ public class NightVisionCMD extends CorePlayerCommand {
 
         } else {
 
-            list.remove(player);
-
             player.removePotionEffect(PotionEffectType.NIGHT_VISION);
             BuildSystem.getInstance().getMessenger().sendSuccess(player, "Du nun keine Nachtsicht mehr!");
+
+            list.remove(player);
+
         }
 
         return false;
