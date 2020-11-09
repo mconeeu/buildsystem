@@ -64,7 +64,8 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         registerCommands(
                 new SkullCMD(),
                 new FinishCMD(),
-                new WorldToolsCMD()
+                new WorldToolsCMD(),
+                new NightVisionCMD()
         );
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);

@@ -11,11 +11,14 @@ import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.event.player.CorePlayerLoadedEvent;
 import eu.mcone.coresystem.api.bukkit.event.player.PlayerVanishEvent;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GeneralPlayerListener implements Listener {
@@ -40,6 +43,17 @@ public class GeneralPlayerListener implements Listener {
     public void onVanish(PlayerVanishEvent e) {
         for (CorePlayer cp : CoreSystem.getInstance().getOnlineCorePlayers()) {
             cp.getScoreboard().reload();
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerInteractEvent e) {
+        if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            if (e.getItem() != null) {
+                if (e.getMaterial().equals(Material.POTION)) {
+                    e.setCancelled(true);
+                }
+            }
         }
     }
 
