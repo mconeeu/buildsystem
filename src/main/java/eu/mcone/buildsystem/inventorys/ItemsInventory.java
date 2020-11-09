@@ -19,9 +19,8 @@ public class ItemsInventory extends CoreInventory {
             if (shematics.getIsListed()) {
                 setItem(i, shematics.getItem(), e -> {
                     player.closeInventory();
-                    if (!BuildSystem.getInstance().getSpecialItems().containsKey(player)) {
-                        player.getInventory().addItem(BlockPlaceEvent.sponge);
-                    }
+                    player.getInventory().addItem(BlockPlaceEvent.sponge);
+
                     BuildSystem.getInstance().getSpecialItems().put(player, shematics.getShematicName());
                     BuildSystem.getInstance().getMessenger().sendSuccess(player, "Du hast das Shematic §a§l" + shematics.getName().toUpperCase() + "§2 ausgewähl!");
                 });
