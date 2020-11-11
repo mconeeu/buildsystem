@@ -12,14 +12,13 @@ import eu.mcone.coresystem.api.bukkit.event.player.CorePlayerLoadedEvent;
 import eu.mcone.coresystem.api.bukkit.event.player.PlayerVanishEvent;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerAchievementAwardedEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 
 public class GeneralPlayerListener implements Listener {
 
@@ -27,6 +26,19 @@ public class GeneralPlayerListener implements Listener {
     public void onCorePlayerLoaded(CorePlayerLoadedEvent e) {
         CorePlayer p = e.getPlayer();
         new BuildPlayer(p);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        CorePlayer corePlayer = CoreSystem.getInstance().getCorePlayer(e.getPlayer());
+        if (e.getPlayer().hasPermission("build.join.vanish")) {
+            corePlayer.setVanished(true);
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        e.setDeathMessage(null);
     }
 
     @EventHandler
