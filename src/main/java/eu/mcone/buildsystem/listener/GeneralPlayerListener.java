@@ -27,6 +27,9 @@ public class GeneralPlayerListener implements Listener {
     public void onCorePlayerLoaded(CorePlayerLoadedEvent e) {
         CorePlayer p = e.getPlayer();
         new BuildPlayer(p);
+
+//        p.setScoreboard(new BuildTablist());
+//        p.getScoreboard().setNewObjective(new SidebarObjective());
     }
 
     @EventHandler
