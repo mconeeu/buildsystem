@@ -33,12 +33,12 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/mconeeu/artifacts</url>
         </repository>
         <repository>
-            <id>onegaming-gitlab-systems</id>
-            <url>https://gitlab.onegaming.group/api/v4/groups/systems/-/packages/maven</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>worldedit-repo</id>
