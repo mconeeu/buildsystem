@@ -9,16 +9,16 @@ import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.buildsystem.player.BuildPlayer;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.event.player.CorePlayerLoadedEvent;
-import eu.mcone.coresystem.api.bukkit.event.player.PlayerVanishEvent;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GeneralPlayerListener implements Listener {
 
@@ -29,14 +29,6 @@ public class GeneralPlayerListener implements Listener {
 
 //        p.setScoreboard(new BuildTablist());
 //        p.getScoreboard().setNewObjective(new SidebarObjective());
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        CorePlayer corePlayer = CoreSystem.getInstance().getCorePlayer(e.getPlayer());
-        if (e.getPlayer().hasPermission("build.join.vanish")) {
-            corePlayer.setVanished(true);
-        }
     }
 
     @EventHandler
@@ -55,13 +47,6 @@ public class GeneralPlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onVanish(PlayerVanishEvent e) {
-        for (CorePlayer cp : CoreSystem.getInstance().getOnlineCorePlayers()) {
-            cp.getScoreboard().reload();
-        }
-    }
-
-    @EventHandler
     public void on(PlayerInteractEvent e) {
         if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (e.getItem() != null) {
@@ -77,11 +62,6 @@ public class GeneralPlayerListener implements Listener {
         BuildPlayer bp = BuildSystem.getInstance().getBuildPlayer(e.getPlayer().getUniqueId());
         bp.saveData();
         BuildSystem.getInstance().unregisterBuildPlayer(bp);
-    }
-
-    @EventHandler
-    public void onAward(PlayerAchievementAwardedEvent e) {
-        e.setCancelled(true);
     }
 
 }

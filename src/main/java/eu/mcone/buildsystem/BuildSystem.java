@@ -7,6 +7,7 @@ package eu.mcone.buildsystem;
 
 import com.sk89q.wepif.PermissionsProvider;
 import eu.mcone.buildsystem.command.*;
+import eu.mcone.buildsystem.heads.HeadDatabase;
 import eu.mcone.buildsystem.listener.BlockPlaceEvent;
 import eu.mcone.buildsystem.listener.GeneralPlayerListener;
 import eu.mcone.buildsystem.listener.SecretSignsListener;
@@ -16,6 +17,7 @@ import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.coresystem.api.bukkit.CorePlugin;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
+import eu.mcone.coresystem.api.bukkit.listener.PlayerAchievementAwardedCanceller;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManager;
 import eu.mcone.coresystem.api.bukkit.player.profile.interfaces.HomeManagerGetter;
@@ -29,12 +31,18 @@ import java.util.*;
 
 public class BuildSystem extends CorePlugin implements PermissionsProvider, HomeManagerGetter {
 
+    static {
+        System.setProperty("DynamicWorldLoading", "true");
+    }
+
     @Getter
     private static BuildSystem instance;
     @Getter
     private CoreWorld plotWorld;
     @Getter
     private WorldToolsManager worldManager;
+    @Getter
+    private HeadDatabase headDatabase;
     @Getter
     private List<BuildPlayer> players;
     @Getter
@@ -51,22 +59,25 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         players = new ArrayList<>();
         specialItems = new HashMap<>();
         plotWorld = CoreSystem.getInstance().getWorldManager().getWorld("plots");
-        CoreSystem.getInstance().getTranslationManager().loadAdditionalCategories("build");
 
-        sendConsoleMessage("§aProviding WEPIF Permissions!");
+        sendConsoleMessage("§aProviding WEPIF Permissions...");
 
-        sendConsoleMessage("§aStarting WorldToolsManager!");
+        sendConsoleMessage("§aStarting WorldToolsManager...");
         worldManager = new WorldToolsManager(this);
+
+        sendConsoleMessage("§aLoading HeadDatabase...");
+        headDatabase = new HeadDatabase(this);
 
         sendConsoleMessage("§aLoading Commands, Events, TpSystems!");
         registerEvents(
                 new GeneralPlayerListener(),
                 new SecretSignsListener(),
                 new WeatherChangeListener(),
-                new BlockPlaceEvent()
+                new BlockPlaceEvent(),
+                new PlayerAchievementAwardedCanceller()
         );
         registerCommands(
-                new SkullCMD(),
+                new HeadCMD(),
                 new FinishCMD(),
                 new WorldToolsCMD(),
                 new NightVisionCMD(),
@@ -76,6 +87,9 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
         CoreSystem.getInstance().enableSpawnCommand(this, plotWorld, 0);
         CoreSystem.getInstance().enableHomeSystem(this, this, 0);
         CoreSystem.getInstance().enableTpaSystem(this, 0);
+        CoreSystem.getInstance().getWorldManager().getDynamicWorldLoader().addToBlacklist(
+                worldManager.getDynamicWorldLoadBlacklist().toArray(new CoreWorld[0])
+        );
 
         sendConsoleMessage("§aVersion §f" + this.getDescription().getVersion() + "§a enabled...");
     }
@@ -190,4 +204,5 @@ public class BuildSystem extends CorePlugin implements PermissionsProvider, Home
     public HomeManager getHomeManager(Player player) {
         return getBuildPlayer(player.getUniqueId());
     }
+
 }

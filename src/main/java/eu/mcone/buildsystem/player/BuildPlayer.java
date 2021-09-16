@@ -12,6 +12,7 @@ import eu.mcone.buildsystem.worldtools.WorldToolsManager;
 import eu.mcone.coresystem.api.bukkit.player.CorePlayer;
 import eu.mcone.coresystem.api.bukkit.player.plugin.GamePlayerData;
 import eu.mcone.coresystem.api.bukkit.player.profile.PlayerDataProfile;
+import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import lombok.Getter;
 import org.bukkit.World;
 
@@ -60,13 +61,17 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
         return finishedPlot != null;
     }
 
+    public WorldRole getWorldRole(CoreWorld world) {
+        return getWorldRole(world.bukkit());
+    }
+
     public WorldRole getWorldRole(World world) {
         return corePlayer.bukkit().hasPermission(WorldToolsManager.BUILD_PERMISSION)
                 ? WorldRole.OWNER
-                : BuildSystem.getInstance().getWorldManager().getWorldRole(corePlayer.getUuid(), world);
+                : BuildSystem.getInstance().getWorldManager().getWorldConfig(world).getWorldRole(corePlayer.getUuid());
     }
 
-    public boolean hasAccessTo(World world) {
+    public boolean hasAccessTo(CoreWorld world) {
         return getWorldRole(world) != null || corePlayer.hasPermission(WorldToolsManager.BUILD_PERMISSION);
     }
 
@@ -88,14 +93,12 @@ public class BuildPlayer extends GamePlayerData<BuildPlayerDataProfile> {
         }
     }
 
-    public String getWorldRoleLabel(World world) {
+    public String getWorldRoleLabel(CoreWorld world) {
         WorldRole role = getWorldRole(world);
 
         return corePlayer.hasPermission(WorldToolsManager.BUILD_PERMISSION)
                 ? "§cTeam-Builder"
-                : (role != null
-                ? role.getLabel()
-                : "§7§oBesucher");
+                : (role != null ? role.getLabel() : "§7§oBesucher");
     }
 
 }

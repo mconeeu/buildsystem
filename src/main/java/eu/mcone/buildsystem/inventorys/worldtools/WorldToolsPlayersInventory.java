@@ -1,8 +1,9 @@
 package eu.mcone.buildsystem.inventorys.worldtools;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.buildsystem.worldtools.WorldRole;
-import eu.mcone.buildsystem.worldtools.WorldRoleEntry;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
 import eu.mcone.coresystem.api.bukkit.inventory.CoreInventory;
 import eu.mcone.coresystem.api.bukkit.inventory.InventoryOption;
@@ -12,18 +13,41 @@ import eu.mcone.coresystem.api.bukkit.inventory.anvil.CoreAnvilInventory;
 import eu.mcone.coresystem.api.bukkit.item.ItemBuilder;
 import eu.mcone.coresystem.api.bukkit.item.Skull;
 import eu.mcone.coresystem.api.bukkit.player.OfflineCorePlayer;
+import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
 import eu.mcone.coresystem.api.core.exception.PlayerNotResolvedException;
+import group.onegaming.networkmanager.core.api.database.Database;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Updates.combine;
 
 public class WorldToolsPlayersInventory extends CoreInventory {
+
+    private static final MongoCollection<Document> USERINFO;
+
+    static {
+        MongoCollection<Document> userinfo = null;
+
+        try {
+            Method dbGetter = CoreSystem.getInstance().getClass().getDeclaredMethod("getMongoDB", Database.class);
+            MongoDatabase mc1system = (MongoDatabase) dbGetter.invoke(CoreSystem.getInstance(), Database.SYSTEM);
+            userinfo = mc1system.getCollection("userinfo");
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        } finally {
+            USERINFO = userinfo;
+        }
+    }
 
     private static final CoreAnvilInventory ANVIL_INVENTORY = CoreSystem.getInstance().createAnvilInventory(event -> {
         String targetName = event.getName();
@@ -33,7 +57,7 @@ public class WorldToolsPlayersInventory extends CoreInventory {
 
         UUID uuid;
         String name;
-        World w = WorldToolsPlayersInventory.toSetWorlds.get(p);
+        CoreWorld w = WorldToolsPlayersInventory.toSetWorlds.get(p);
 
         try {
             if (t != null) {
@@ -62,7 +86,7 @@ public class WorldToolsPlayersInventory extends CoreInventory {
                 return;
             }
 
-            BuildSystem.getInstance().getWorldManager().setWorldRole(uuid, name, w, WorldRole.GUEST);
+            BuildSystem.getInstance().getWorldManager().setWorldRole(w, uuid, WorldRole.GUEST);
             p.playSound(p.getLocation(), Sound.NOTE_STICKS, 1, 1);
             BuildSystem.getInstance().getMessenger().send(p, "§2Der Spieler§a " + name + "§2 hat nun die§7 Gast§2 Rolle auf der Welt " + w.getName());
             WorldToolsPlayersInventory.toSetWorlds.remove(p);
@@ -74,9 +98,9 @@ public class WorldToolsPlayersInventory extends CoreInventory {
         }
     }).setItem(AnvilSlot.INPUT_LEFT, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, 13).displayName("?").create());
 
-    private static final Map<Player, World> toSetWorlds = new HashMap<>();
+    private static final Map<Player, CoreWorld> toSetWorlds = new HashMap<>();
 
-    public WorldToolsPlayersInventory(Player player, World world) {
+    public WorldToolsPlayersInventory(Player player, CoreWorld world) {
         super(
                 "§3§lWelt-Rollen",
                 player,
@@ -84,20 +108,31 @@ public class WorldToolsPlayersInventory extends CoreInventory {
                 InventoryOption.FILL_EMPTY_SLOTS
         );
 
+        Map<String, WorldRole> roles = BuildSystem.getInstance().getWorldManager().getWorldConfig(world).getWorldRoles();
+        Map<String, String> names = new HashMap<>();
+
+        List<Bson> query = new ArrayList<>();
+        roles.keySet().forEach(uuid -> query.add(eq("uuid", uuid)));
+        for (Document document : USERINFO.find(combine(query)).projection(include("uuid", "name"))) {
+            names.put(document.getString("uuid"), document.getString("name"));
+        }
+
         int i = 0;
-        for (WorldRoleEntry.WorldPlayerEntry worldRole : BuildSystem.getInstance().getWorldManager().getWorldRoles(world)) {
+        for (Map.Entry<String, WorldRole> role : BuildSystem.getInstance().getWorldManager().getWorldConfig(world).getWorldRoles().entrySet()) {
+            String name = names.get(role.getKey());
+
             setItem(
                     i,
-                    new Skull(worldRole.getName())
+                    new Skull(name)
                             .toItemBuilder()
-                            .displayName("§f" + worldRole.getName())
+                            .displayName("§f" + name)
                             .lore(
-                                    "§7Rolle: §f" + worldRole.getRole().getLabel(),
+                                    "§7Rolle: §f" + role.getValue().getLabel(),
                                     "",
                                     "§8» §f§nLinksklick§8 | §7§oRolle verändern"
                             )
                             .create(),
-                    e -> new WorldToolsChooseRoleInventory(player, world, worldRole.getUuid(), worldRole.getName())
+                    e -> new WorldToolsChooseRoleInventory(player, world, UUID.fromString(role.getKey()), name)
             );
             i++;
         }
@@ -118,9 +153,9 @@ public class WorldToolsPlayersInventory extends CoreInventory {
         openInventory();
     }
 
-    private static int calculateSize(World world) {
+    private static int calculateSize(CoreWorld world) {
         return Math.min(
-                (((BuildSystem.getInstance().getWorldManager().getWorldRoles(world).size() - 1) / 9) + 2) * 9,
+                (((BuildSystem.getInstance().getWorldManager().getWorldConfig(world).getWorldRoles().size() - 1) / 9) + 2) * 9,
                 InventorySlot.ROW_6
         );
     }

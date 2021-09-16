@@ -11,99 +11,209 @@ import eu.mcone.buildsystem.BuildSystem;
 import eu.mcone.buildsystem.command.WorldToolsCMD;
 import eu.mcone.buildsystem.listener.WorldToolsListener;
 import eu.mcone.coresystem.api.bukkit.CoreSystem;
+import eu.mcone.coresystem.api.bukkit.gamemode.Gamemode;
+import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
+import lombok.Getter;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.UuidCodecProvider;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 
 import java.util.*;
 
 import static com.mongodb.MongoClientSettings.getDefaultCodecRegistry;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class WorldToolsManager {
 
-    private static final MongoCollection<WorldRoleEntry> COLLECTION = CoreSystem.getInstance().getMongoDB().withCodecRegistry(
+    private static final MongoCollection<WorldConfig> WORLDS_COLLECTION = CoreSystem.getInstance().getMongoDB().withCodecRegistry(
             fromRegistries(getDefaultCodecRegistry(), fromProviders(new UuidCodecProvider(UuidRepresentation.JAVA_LEGACY), PojoCodecProvider.builder().conventions(Conventions.DEFAULT_CONVENTIONS).automatic(true).build()))
-    ).getCollection("build_worlds", WorldRoleEntry.class);
-    public static final String BUILD_PERMISSION = "build.builder";
-    public static final String TEAM_PERMISSIONS = "build.staff";
-    private final Map<World, Map<UUID, WorldRoleEntry.WorldPlayerEntry>> worldRoles;
+    ).getCollection("build_worlds", WorldConfig.class);
+    private static final MongoCollection<WorldCategory> WORLD_CATEGORIES_COLLECTION = CoreSystem.getInstance().getMongoDB().withCodecRegistry(
+            fromRegistries(getDefaultCodecRegistry(), fromProviders(new UuidCodecProvider(UuidRepresentation.JAVA_LEGACY), PojoCodecProvider.builder().conventions(Conventions.DEFAULT_CONVENTIONS).automatic(true).build()))
+    ).getCollection("build_world_categories", WorldCategory.class);
+
+    public static final String BUILD_PERMISSION = "build.builder", TEAM_PERMISSIONS = "build.staff";
+    public static final WorldCategory MISCELLANEOUS_CATEGORY = new WorldCategory("Verschiedenes", Material.DEAD_BUSH);
+
+    @Getter
+    private final Set<WorldConfig> worldConfigs;
+    @Getter
+    private final Set<WorldCategory> worldCategories;
 
     public WorldToolsManager(BuildSystem system) {
-        worldRoles = new HashMap<>();
+        worldConfigs = new HashSet<>();
+        worldCategories = new HashSet<>();
 
         FaweAPI.addMaskManager(new MaskManager());
         system.registerCommands(new WorldToolsCMD());
-        system.registerEvents(new WorldToolsListener());
+        system.registerEvents(new WorldToolsListener(this));
 
         reload();
     }
 
     public void reload() {
-        worldRoles.clear();
-        for (WorldRoleEntry worldRoleEntry : COLLECTION.find()) {
-            Map<UUID, WorldRoleEntry.WorldPlayerEntry> roles = new HashMap<>();
-            for (WorldRoleEntry.WorldPlayerEntry worldRole : worldRoleEntry.getWorldRoles()) {
-                roles.put(worldRole.getUuid(), worldRole);
+        worldCategories.clear();
+        worldConfigs.clear();
+
+        worldCategories.add(MISCELLANEOUS_CATEGORY);
+        for (Gamemode gamemode : Gamemode.values()) {
+            worldCategories.add(
+                    new WorldCategory(gamemode.getName(), "§7§oSpielmodus "+gamemode.getName(), gamemode.getItem())
+            );
+        }
+        for (WorldCategory category : WORLD_CATEGORIES_COLLECTION.find()) {
+            worldCategories.add(category);
+        }
+
+        Set<CoreWorld> worlds = new HashSet<>(CoreSystem.getInstance().getWorldManager().getWorlds());
+        worlds.remove(BuildSystem.getInstance().getPlotWorld());
+        for (WorldConfig config : WORLDS_COLLECTION.find()) {
+            worldConfigs.add(config);
+
+            CoreWorld world = CoreSystem.getInstance().getWorldManager().getWorldById(config.getWorldId());
+            if (world != null) {
+                worlds.remove(world);
+            }
+        }
+
+        if (worlds.size() > 0) {
+            List<WorldConfig> configs = new ArrayList<>();
+            for (CoreWorld world : worlds) {
+                configs.add(constructConfig(world));
             }
 
-            this.worldRoles.put(Bukkit.getWorld(worldRoleEntry.getWorldName()), roles);
+            WORLDS_COLLECTION.insertMany(configs);
         }
     }
 
-    public Collection<WorldRoleEntry.WorldPlayerEntry> getWorldRoles(World world) {
-        return worldRoles.getOrDefault(world, Collections.emptyMap()).values();
+    public WorldConfig getWorldConfig(World world) {
+        return getWorldConfig(CoreSystem.getInstance().getWorldManager().getWorld(world));
     }
 
-    public WorldRole getWorldRole(UUID uuid, World world) {
-        WorldRoleEntry.WorldPlayerEntry entry = worldRoles.getOrDefault(world, Collections.emptyMap()).getOrDefault(uuid, null);
-        return entry != null ? entry.getRole() : null;
+    public WorldConfig getWorldConfig(CoreWorld world) {
+        return getWorldConfig(world.getId());
     }
 
-    public void setWorldRole(UUID uuid, String name, World world, WorldRole role) {
-        WorldRoleEntry.WorldPlayerEntry entry = new WorldRoleEntry.WorldPlayerEntry(
-                uuid, name, role
+    public WorldConfig getWorldConfig(String id) {
+        for (WorldConfig config : worldConfigs) {
+            if (config.getWorldId().equals(id)) {
+                return config;
+            }
+        }
+
+        return null;
+    }
+
+    public void setWorldRole(World world, UUID uuid, WorldRole role) {
+        setWorldRole(
+                CoreSystem.getInstance().getWorldManager().getWorld(world),
+                uuid,
+                role
         );
-
-        if (worldRoles.containsKey(world)) {
-            worldRoles.get(world).put(uuid, entry);
-
-            COLLECTION.updateOne(
-                    combine(
-                            eq("worldName", world.getName()),
-                            eq("worldRoles.uuid", uuid)
-                    ),
-                    set("worldRoles.$.role", role.toString())
-            );
-        } else {
-            WorldRoleEntry worldEntry = new WorldRoleEntry(
-                    world.getName(), new ArrayList<>(Collections.singletonList(entry))
-            );
-
-            worldRoles.put(world, new HashMap<UUID, WorldRoleEntry.WorldPlayerEntry>(){{put(uuid, entry);}});
-            COLLECTION.insertOne(worldEntry);
-        }
     }
 
-    public void removeFromWorld(World world, UUID uuid, String name) {
-        if (worldRoles.containsKey(world) && worldRoles.get(world).containsKey(uuid)) {
-            worldRoles.get(world).remove(uuid);
+    public void setWorldRole(CoreWorld world, UUID uuid, WorldRole role) {
+        setWorldRole(world.getId(), uuid, role);
+    }
 
-            COLLECTION.updateOne(
-                    eq("worldName", world.getName()),
-                    pull("worldRoles", combine(
-                            eq("uuid", uuid)
-                    ))
+    public void setWorldRole(String worldId, UUID uuid, WorldRole role) {
+        WorldConfig config = getWorldConfig(worldId);
+
+        if (config != null) {
+            config.updateWorldRole(uuid, role);
+            WORLDS_COLLECTION.replaceOne(
+                    eq("worldId", config.getWorldId()),
+                    config
             );
-        } else {
-            throw new IllegalStateException("Could not remove Player "+name+" from world! This player does not have any right on this world!");
+        } else throw new IllegalArgumentException("Could not set WorldRole for "+uuid+" to "+role+". WorldConfig for worldId "+worldId+" is not loaded!");
+    }
+
+    public void removeFromWorld(World world, UUID uuid) {
+        removeFromWorld(CoreSystem.getInstance().getWorldManager().getWorld(world), uuid);
+    }
+
+    public void removeFromWorld(CoreWorld world, UUID uuid) {
+        removeFromWorld(world.getId(), uuid);
+    }
+
+    public void removeFromWorld(String worldId, UUID uuid) {
+        WorldConfig config = getWorldConfig(worldId);
+
+        if (config != null) {
+            config.removeFromWorld(uuid);
+            WORLDS_COLLECTION.replaceOne(
+                    eq("worldId", config.getWorldId()),
+                    config
+            );
+        } else throw new IllegalArgumentException("Could not remove "+uuid+" from World. WorldConfig for worldId "+worldId+" is not loaded!");
+    }
+
+    public WorldCategory getWorldCategory(String id) {
+        for (WorldCategory cat : worldCategories) {
+            if (cat.getId().toString().equals(id)) {
+                return cat;
+            }
         }
+
+        return null;
+    }
+
+    public WorldCategory getWorldCategory(Material material) {
+        for (WorldCategory cat : worldCategories) {
+            if (cat.getItem().equals(material)) {
+                return cat;
+            }
+        }
+
+        return null;
+    }
+
+    public void addWorldCategory(WorldCategory category) {
+        if (getWorldCategory(category.getName()) == null && getWorldCategory(category.getItem()) == null) {
+            worldCategories.add(category);
+            WORLD_CATEGORIES_COLLECTION.insertOne(category);
+        } else throw new IllegalArgumentException("Could not add WorldCatgory "+category.getName()+". Name or Material already exists!");
+    }
+
+    public boolean removeWorldCategory(WorldCategory category) {
+        if (worldCategories.contains(category)) {
+            worldCategories.remove(category);
+            WORLD_CATEGORIES_COLLECTION.deleteOne(eq("name", category.getName()));
+
+            return true;
+        } else return false;
+    }
+
+    public void registerNewWorld(CoreWorld world) {
+        WorldConfig config = constructConfig(world);
+
+        worldConfigs.add(config);
+        WORLDS_COLLECTION.insertOne(config);
+    }
+
+    public Set<CoreWorld> getDynamicWorldLoadBlacklist() {
+        Set<CoreWorld> blacklist = new HashSet<>(Collections.singleton(BuildSystem.getInstance().getPlotWorld()));
+
+        for (WorldConfig config : worldConfigs) {
+            if (config.isPreventDynamicLoading()) {
+                CoreWorld world = CoreSystem.getInstance().getWorldManager().getWorldById(config.getWorldId());
+
+                if (world != null) {
+                    blacklist.add(world);
+                }
+            }
+        }
+
+        return blacklist;
+    }
+
+    private WorldConfig constructConfig(CoreWorld world) {
+        return new WorldConfig(world.getId(), null, WorldState.IN_WORK, new HashMap<>(), false);
     }
 
 }

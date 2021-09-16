@@ -6,9 +6,11 @@
 package eu.mcone.buildsystem.listener;
 
 import eu.mcone.buildsystem.BuildSystem;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import eu.mcone.buildsystem.worldtools.WorldConfig;
+import eu.mcone.buildsystem.worldtools.WorldToolsManager;
+import eu.mcone.coresystem.api.bukkit.event.world.WorldCreateEvent;
+import eu.mcone.coresystem.api.bukkit.world.CoreWorld;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -16,11 +18,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.*;
 
+@RequiredArgsConstructor
 public class WorldToolsListener implements Listener {
+
+    private final WorldToolsManager manager;
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
@@ -84,6 +88,16 @@ public class WorldToolsListener implements Listener {
 
         if (!p.getWorld().getName().equals(BuildSystem.getInstance().getPlotWorld().getName())) {
             checkBuildPermission(e, e.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onWorldLoad(WorldCreateEvent e) {
+        CoreWorld w = e.getWorld();
+        WorldConfig config = manager.getWorldConfig(w);
+
+        if (config == null) {
+            manager.registerNewWorld(w);
         }
     }
 
